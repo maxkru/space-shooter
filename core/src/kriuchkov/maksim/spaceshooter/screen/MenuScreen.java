@@ -30,6 +30,12 @@ public class MenuScreen extends BaseScreen {
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        if(!touch.epsilonEquals(pos, 1f)) {
+            v = touch.cpy().sub(pos).nor();
+            pos.add(v);
+        }
+
         batch.begin();
         batch.draw(background, 0, 0);
         batch.draw(img, pos.x - img.getWidth() / 2.0f, pos.y - img.getHeight() / 2.0f);
@@ -42,4 +48,12 @@ public class MenuScreen extends BaseScreen {
         background.dispose();
         super.dispose();
     }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        System.out.printf("MenuScreen: touchDown(x = %d, y = %d)\n", screenX, screenY);
+        touch.set(screenX, Gdx.graphics.getHeight() - screenY);
+        return true;
+    }
+
 }
