@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class BaseScreen implements Screen, InputProcessor {
 
-    private SpriteBatch batch;
+    protected SpriteBatch batch;
 
     @Override
     public boolean keyDown(int keycode) {
