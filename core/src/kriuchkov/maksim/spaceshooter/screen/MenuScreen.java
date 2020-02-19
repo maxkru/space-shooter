@@ -1,3 +1,4 @@
+
 package kriuchkov.maksim.spaceshooter.screen;
 
 import com.badlogic.gdx.Gdx;
@@ -15,6 +16,7 @@ public class MenuScreen extends BaseScreen {
     private Vector2 touch;
     private Vector2 v;
     private Vector2 pos;
+    private boolean touched;
 
     @Override
     public void show() {
@@ -22,6 +24,7 @@ public class MenuScreen extends BaseScreen {
         touch = new Vector2();
         v = new Vector2();
         pos = new Vector2();
+        touched = false;
 
         img = new Texture("badlogic.jpg");
         background = new Texture("background_simple.png");
@@ -31,7 +34,7 @@ public class MenuScreen extends BaseScreen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        if(!touch.epsilonEquals(pos, 1f)) {
+        if(touched && !touch.epsilonEquals(pos, 1f)) {
             v = touch.cpy().sub(pos).nor();
             pos.add(v);
         }
@@ -53,6 +56,21 @@ public class MenuScreen extends BaseScreen {
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         System.out.printf("MenuScreen: touchDown(x = %d, y = %d)\n", screenX, screenY);
         touch.set(screenX, Gdx.graphics.getHeight() - screenY);
+        touched = true;
+        return true;
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        System.out.printf("MenuScreen: touchDragged(x = %d, y = %d)\n", screenX, screenY);
+        touch.set(screenX, Gdx.graphics.getHeight() - screenY);
+        return true;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        touched = false;
+        System.out.printf("MenuScreen: touchUp(x = %d, y = %d)\n", screenX, screenY);
         return true;
     }
 
