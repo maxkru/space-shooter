@@ -23,10 +23,10 @@ public class MenuScreen extends BaseScreen {
         super.show();
         touch = new Vector2();
         v = new Vector2();
-        pos = new Vector2();
+        pos = new Vector2(Gdx.graphics.getWidth() / 2.0f, Gdx.graphics.getHeight() / 2.0f);
         touched = false;
 
-        img = new Texture("badlogic.jpg");
+        img = new Texture("circle.png");
         background = new Texture("background_simple.png");
     }
     @Override
