@@ -16,6 +16,7 @@ public class MenuScreen extends BaseScreen {
     private Vector2 touch;
     private Vector2 v;
     private Vector2 pos;
+    private Vector2 buf;
     private boolean touched;
 
     @Override
@@ -24,6 +25,7 @@ public class MenuScreen extends BaseScreen {
         touch = new Vector2();
         v = new Vector2();
         pos = new Vector2(Gdx.graphics.getWidth() / 2.0f, Gdx.graphics.getHeight() / 2.0f);
+        buf = new Vector2();
         touched = false;
 
         img = new Texture("circle.png");
@@ -33,9 +35,8 @@ public class MenuScreen extends BaseScreen {
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
         if(touched && !touch.epsilonEquals(pos, 1f)) {
-            v = touch.cpy().sub(pos).nor();
+            v = buf.set(touch).sub(pos).nor();
             pos.add(v);
         }
 
