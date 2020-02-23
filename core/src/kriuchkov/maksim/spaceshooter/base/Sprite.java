@@ -9,6 +9,8 @@ import ru.geekbrains.math.Rect;
 
 public abstract class Sprite extends Rect {
 
+    protected Vector2 v;
+
     protected float angle;
     protected float scale = 1f;
 
