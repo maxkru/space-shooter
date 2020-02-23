@@ -67,7 +67,7 @@ public class BaseScreen implements Screen, InputProcessor {
         return false;
     }
 
-    private boolean touchDown(Vector2 touch, int pointer, int button) {
+    public boolean touchDown(Vector2 touch, int pointer, int button) {
         System.out.printf("touchDown(touch.x = %f, touch.y = %f)\n", touch.x, touch.y);
         return false;
     }
@@ -80,7 +80,7 @@ public class BaseScreen implements Screen, InputProcessor {
         return false;
     }
 
-    private boolean touchUp(Vector2 touch, int pointer, int button) {
+    public boolean touchUp(Vector2 touch, int pointer, int button) {
         System.out.printf("touchUp(touch.x = %f, touch.y = %f)\n", touch.x, touch.y);
         return false;
     }
@@ -93,7 +93,7 @@ public class BaseScreen implements Screen, InputProcessor {
         return false;
     }
 
-    private boolean touchDragged(Vector2 touch, int pointer) {
+    public boolean touchDragged(Vector2 touch, int pointer) {
         System.out.printf("touchDragged(touch.x = %f, touch.y = %f)\n", touch.x, touch.y);
         return false;
     }
