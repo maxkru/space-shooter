@@ -7,11 +7,15 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 
 import kriuchkov.maksim.spaceshooter.base.BaseScreen;
+import kriuchkov.maksim.spaceshooter.sprite.Background;
+import ru.geekbrains.math.Rect;
 
 public class MenuScreen extends BaseScreen {
 
     private Texture img;
-    private Texture background;
+    private Texture bg;
+
+    private Background background;
 
     private Vector2 touch;
     private Vector2 v;
@@ -29,7 +33,8 @@ public class MenuScreen extends BaseScreen {
         touched = false;
 
         img = new Texture("circle.png");
-        background = new Texture("background_simple.png");
+        bg = new Texture("background_simple.png");
+        background = new Background(bg);
     }
     @Override
     public void render(float delta) {
@@ -41,14 +46,14 @@ public class MenuScreen extends BaseScreen {
         }
         pos.set(-0.5f,-0.5f);
         batch.begin();
-        batch.draw(img, pos.x, pos.y, 1f, 1f);
+        background.draw(batch);
         batch.end();
     }
 
     @Override
     public void dispose () {
         img.dispose();
-        background.dispose();
+        bg.dispose();
         super.dispose();
     }
 
@@ -71,4 +76,9 @@ public class MenuScreen extends BaseScreen {
         return super.touchUp(screenX, screenY, pointer, button);
     }
 
+    @Override
+    public void resize(Rect worldBounds) {
+        super.resize(worldBounds);
+        background.resize(worldBounds);
+    }
 }
