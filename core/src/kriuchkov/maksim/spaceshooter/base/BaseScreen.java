@@ -61,6 +61,7 @@ public class BaseScreen implements Screen, InputProcessor {
     public void show() {
         System.out.println("show()");
         batch = new SpriteBatch();
+        batch.getProjectionMatrix().idt();
         Gdx.input.setInputProcessor(this);
     }
 

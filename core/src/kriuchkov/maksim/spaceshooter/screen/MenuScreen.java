@@ -24,7 +24,7 @@ public class MenuScreen extends BaseScreen {
         super.show();
         touch = new Vector2();
         v = new Vector2();
-        pos = new Vector2(Gdx.graphics.getWidth() / 2.0f, Gdx.graphics.getHeight() / 2.0f);
+        pos = new Vector2();
         buf = new Vector2();
         touched = false;
 
@@ -39,10 +39,9 @@ public class MenuScreen extends BaseScreen {
             v = buf.set(touch).sub(pos).nor();
             pos.add(v);
         }
-
+        pos.set(-1f,-1f);
         batch.begin();
-        batch.draw(background, 0, 0);
-        batch.draw(img, pos.x - img.getWidth() / 2.0f, pos.y - img.getHeight() / 2.0f);
+        batch.draw(img, pos.x, pos.y, 2f, 2f);
         batch.end();
     }
 
