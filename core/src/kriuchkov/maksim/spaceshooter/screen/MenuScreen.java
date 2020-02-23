@@ -33,15 +33,15 @@ public class MenuScreen extends BaseScreen {
     }
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         if(touched && !touch.epsilonEquals(pos, 1f)) {
             v = buf.set(touch).sub(pos).nor();
             pos.add(v);
         }
-        pos.set(-1f,-1f);
+        pos.set(-0.5f,-0.5f);
         batch.begin();
-        batch.draw(img, pos.x, pos.y, 2f, 2f);
+        batch.draw(img, pos.x, pos.y, 1f, 1f);
         batch.end();
     }
 
@@ -55,23 +55,20 @@ public class MenuScreen extends BaseScreen {
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         System.out.printf("MenuScreen: touchDown(x = %d, y = %d)\n", screenX, screenY);
-        touch.set(screenX, Gdx.graphics.getHeight() - screenY);
-        touched = true;
-        return true;
+        return super.touchDown(screenX, screenY, pointer, button);
     }
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
         System.out.printf("MenuScreen: touchDragged(x = %d, y = %d)\n", screenX, screenY);
-        touch.set(screenX, Gdx.graphics.getHeight() - screenY);
-        return true;
+        return super.touchDragged(screenX, screenY, pointer);
     }
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         touched = false;
         System.out.printf("MenuScreen: touchUp(x = %d, y = %d)\n", screenX, screenY);
-        return true;
+        return super.touchUp(screenX, screenY, pointer, button);
     }
 
 }
