@@ -7,72 +7,75 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 
 import kriuchkov.maksim.spaceshooter.base.BaseScreen;
+import kriuchkov.maksim.spaceshooter.sprite.Background;
+import kriuchkov.maksim.spaceshooter.sprite.Circle;
+import ru.geekbrains.math.Rect;
 
 public class MenuScreen extends BaseScreen {
 
     private Texture img;
-    private Texture background;
+    private Texture bg;
 
-    private Vector2 touch;
-    private Vector2 v;
+    private Background background;
+    private Circle circle;
+
     private Vector2 pos;
-    private Vector2 buf;
-    private boolean touched;
 
     @Override
     public void show() {
         super.show();
-        touch = new Vector2();
-        v = new Vector2();
-        pos = new Vector2(Gdx.graphics.getWidth() / 2.0f, Gdx.graphics.getHeight() / 2.0f);
-        buf = new Vector2();
-        touched = false;
+        pos = new Vector2();
 
         img = new Texture("circle.png");
-        background = new Texture("background_simple.png");
+        circle = new Circle(img);
+        bg = new Texture("background_simple.png");
+        background = new Background(bg);
     }
+
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        if(touched && !touch.epsilonEquals(pos, 1f)) {
-            v = buf.set(touch).sub(pos).nor();
-            pos.add(v);
-        }
-
+        pos.set(-0.5f,-0.5f);
+        circle.update(delta);
         batch.begin();
-        batch.draw(background, 0, 0);
-        batch.draw(img, pos.x - img.getWidth() / 2.0f, pos.y - img.getHeight() / 2.0f);
+        background.draw(batch);
+        circle.draw(batch);
         batch.end();
     }
 
     @Override
     public void dispose () {
         img.dispose();
-        background.dispose();
+        bg.dispose();
         super.dispose();
     }
 
     @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        System.out.printf("MenuScreen: touchDown(x = %d, y = %d)\n", screenX, screenY);
-        touch.set(screenX, Gdx.graphics.getHeight() - screenY);
-        touched = true;
-        return true;
+    public boolean touchDown(Vector2 touch, int pointer, int button) {
+        System.out.printf("MenuScreen: touchDown(touch.x = %f, touch.y = %f)\n", touch.x, touch.y);
+        circle.touchDown(touch, pointer, button);
+        return false;
     }
 
     @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer) {
-        System.out.printf("MenuScreen: touchDragged(x = %d, y = %d)\n", screenX, screenY);
-        touch.set(screenX, Gdx.graphics.getHeight() - screenY);
-        return true;
+    public boolean touchUp(Vector2 touch, int pointer, int button) {
+        System.out.printf("MenuScreen: touchUp(touch.x = %f, touch.y = %f)\n", touch.x, touch.y);
+        circle.touchUp(touch, pointer, button);
+        return false;
     }
 
     @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        touched = false;
-        System.out.printf("MenuScreen: touchUp(x = %d, y = %d)\n", screenX, screenY);
-        return true;
+    public boolean touchDragged(Vector2 touch, int pointer) {
+        System.out.printf("MenuScreen: touchDragged(touch.x = %f, touch.y = %f)\n", touch.x, touch.y);
+        circle.touchDragged(touch, pointer);
+        return false;
     }
 
+    @Override
+    public void resize(Rect worldBounds) {
+        super.resize(worldBounds);
+        background.resize(worldBounds);
+        circle.resize(worldBounds);
+    }
 }
