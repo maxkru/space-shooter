@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 
 import kriuchkov.maksim.spaceshooter.base.BaseScreen;
 import kriuchkov.maksim.spaceshooter.sprite.Background;
+import kriuchkov.maksim.spaceshooter.sprite.ButtonExit;
 import kriuchkov.maksim.spaceshooter.sprite.Circle;
 import kriuchkov.maksim.spaceshooter.sprite.Star;
 import ru.geekbrains.math.Rect;
@@ -22,7 +23,11 @@ public class MenuScreen extends BaseScreen {
 
     private Background background;
     private Circle circle;
-    private Star star;
+    private Star[] stars;
+
+    private static final int STAR_COUNT = 32;
+
+    private ButtonExit buttonExit;
 
     private Vector2 pos;
 
@@ -35,7 +40,13 @@ public class MenuScreen extends BaseScreen {
         circle = new Circle(atlas);
         bg = new Texture("background_simple.png");
         background = new Background(bg);
-        star = new Star(atlas);
+
+        stars = new Star[STAR_COUNT];
+        for(int i = 0; i < STAR_COUNT; i++) {
+            stars[i] = new Star(atlas);
+        }
+
+        buttonExit = new ButtonExit(atlas);
     }
 
     @Override
@@ -44,15 +55,8 @@ public class MenuScreen extends BaseScreen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         pos.set(-0.5f,-0.5f);
 
-        circle.update(delta);
-        star.update(delta);
-
-        batch.begin();
-
-        background.draw(batch);
-        star.draw(batch);
-
-        batch.end();
+        update(delta);
+        draw();
     }
 
     @Override
@@ -65,14 +69,16 @@ public class MenuScreen extends BaseScreen {
     @Override
     public boolean touchDown(Vector2 touch, int pointer, int button) {
         System.out.printf("MenuScreen: touchDown(touch.x = %f, touch.y = %f)\n", touch.x, touch.y);
-        circle.touchDown(touch, pointer, button);
+//        circle.touchDown(touch, pointer, button);
+        buttonExit.touchDown(touch, pointer, button);
         return false;
     }
 
     @Override
     public boolean touchUp(Vector2 touch, int pointer, int button) {
         System.out.printf("MenuScreen: touchUp(touch.x = %f, touch.y = %f)\n", touch.x, touch.y);
-        circle.touchUp(touch, pointer, button);
+//        circle.touchUp(touch, pointer, button);
+        buttonExit.touchUp(touch, pointer, button);
         return false;
     }
 
@@ -88,6 +94,26 @@ public class MenuScreen extends BaseScreen {
         super.resize(worldBounds);
         background.resize(worldBounds);
         circle.resize(worldBounds);
-        star.resize(worldBounds);
+        for(Star star : stars)
+            star.resize(worldBounds);
+        buttonExit.resize(worldBounds);
+    }
+
+    private void update(float delta) {
+        for(Star star : stars)
+            star.update(delta);
+    }
+
+    private void draw() {
+        batch.begin();
+
+        background.draw(batch);
+
+        for(Star star : stars)
+            star.draw(batch);
+
+        buttonExit.draw(batch);
+
+        batch.end();
     }
 }
