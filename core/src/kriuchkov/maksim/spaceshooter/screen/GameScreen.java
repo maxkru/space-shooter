@@ -11,6 +11,7 @@ import kriuchkov.maksim.spaceshooter.sprite.Background;
 import kriuchkov.maksim.spaceshooter.sprite.ButtonExit;
 import kriuchkov.maksim.spaceshooter.sprite.ButtonStart;
 import kriuchkov.maksim.spaceshooter.sprite.Circle;
+import kriuchkov.maksim.spaceshooter.sprite.PlayerShip;
 import kriuchkov.maksim.spaceshooter.sprite.Star;
 import ru.geekbrains.math.Rect;
 
@@ -18,11 +19,12 @@ public class GameScreen extends BaseScreen {
 
 
     private TextureAtlas atlas;
+    private TextureAtlas atlasMain;
     private Texture bg;
 
     private Background background;
 
-    private Circle circle;
+    private PlayerShip playerShip;
 
     private Star[] stars;
 
@@ -33,7 +35,8 @@ public class GameScreen extends BaseScreen {
         super.show();
 
         atlas = new TextureAtlas("textures/texture_atlas.atlas");
-        circle = new Circle(atlas);
+        atlasMain = new TextureAtlas("textures/mainAtlas.tpack");
+        playerShip = new PlayerShip(atlasMain);
         bg = new Texture("background_simple.png");
         background = new Background(bg);
 
@@ -57,19 +60,19 @@ public class GameScreen extends BaseScreen {
     @Override
     public boolean touchDown(Vector2 touch, int pointer, int button) {
         super.touchDown(touch, pointer, button);
-        return circle.touchDown(touch, pointer, button);
+        return playerShip.touchDown(touch, pointer, button);
     }
 
     @Override
     public boolean touchDragged(Vector2 touch, int pointer) {
         super.touchDragged(touch, pointer);
-        return circle.touchDragged(touch, pointer);
+        return playerShip.touchDragged(touch, pointer);
     }
 
     @Override
     public boolean touchUp(Vector2 touch, int pointer, int button) {
         super.touchUp(touch, pointer, button);
-        return circle.touchUp(touch, pointer, button);
+        return playerShip.touchUp(touch, pointer, button);
     }
 
     @Override
@@ -82,7 +85,7 @@ public class GameScreen extends BaseScreen {
     public void resize(Rect worldBounds) {
         super.resize(worldBounds);
         background.resize(worldBounds);
-        circle.resize(worldBounds);
+        playerShip.resize(worldBounds);
         for(Star star : stars)
             star.resize(worldBounds);
     }
@@ -95,7 +98,7 @@ public class GameScreen extends BaseScreen {
     }
 
     private void update(float delta) {
-        circle.update(delta);
+        playerShip.update(delta);
         for(Star star : stars)
             star.update(delta);
     }
@@ -107,7 +110,7 @@ public class GameScreen extends BaseScreen {
         background.draw(batch);
         for(Star star : stars)
             star.draw(batch);
-        circle.draw(batch);
+        playerShip.draw(batch);
         batch.end();
     }
 }
