@@ -2,6 +2,7 @@ package kriuchkov.maksim.spaceshooter.sprite;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
@@ -15,8 +16,8 @@ public class Circle extends Sprite {
 
     private final float VELOCITY = 0.005f;
 
-    public Circle(Texture texture) {
-        super(new TextureRegion(texture));
+    public Circle(TextureAtlas atlas) {
+        super(atlas.findRegion("circle"));
         v = new Vector2();
         attractor = new Vector2();
         pos.set(0,0);
