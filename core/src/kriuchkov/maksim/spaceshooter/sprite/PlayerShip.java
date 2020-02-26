@@ -54,6 +54,17 @@ public class PlayerShip extends Sprite {
         if(movingByTouch && !attractor.epsilonEquals(pos, VELOCITY)) {
             v.set(attractor).sub(pos).setLength(VELOCITY);
             pos.add(v);
+
         }
+
+        if (pos.y > -getHalfHeight())
+            pos.y = -getHalfHeight();
+        else if (pos.y < -0.5f + getHalfHeight())
+            pos.y = -0.5f + getHalfHeight();
+
+        if (pos.x < -0.5f + getHalfWidth())
+            pos.x = -0.5f + getHalfWidth();
+        else if (pos.x > 0.5f + getHalfWidth())
+            pos.x = 0.5f + getHalfWidth();
     }
 }
