@@ -1,0 +1,33 @@
+
+texture_atlas.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+button_go
+  rotate: false
+  xy: 1, 67
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+button_exit
+  rotate: false
+  xy: 259, 67
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+star
+  rotate: false
+  xy: 1, 1
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+circle
+  rotate: false
+  xy: 517, 259
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
