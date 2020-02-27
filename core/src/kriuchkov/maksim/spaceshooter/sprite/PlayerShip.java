@@ -19,6 +19,8 @@ public class PlayerShip extends Sprite {
     private boolean movingRight;
     private Vector2 keyMovementDirection;
 
+    private Rect worldBounds;
+
     private static final float VELOCITY = 0.005f;
 
     public PlayerShip(TextureAtlas atlas) {
@@ -37,6 +39,7 @@ public class PlayerShip extends Sprite {
     public void resize(Rect worldBounds) {
         super.resize(worldBounds);
         setHeightProportion(0.1f);
+        this.worldBounds = worldBounds;
     }
 
     @Override
@@ -82,10 +85,10 @@ public class PlayerShip extends Sprite {
         else if (pos.y < -0.5f + getHalfHeight())
             pos.y = -0.5f + getHalfHeight();
 
-        if (pos.x < -0.5f + getHalfWidth())
-            pos.x = -0.5f + getHalfWidth();
-        else if (pos.x > 0.5f + getHalfWidth())
-            pos.x = 0.5f + getHalfWidth();
+        if (pos.x < worldBounds.getLeft() + getHalfWidth())
+            pos.x = worldBounds.getLeft() + getHalfWidth();
+        else if (pos.x > worldBounds.getRight() - getHalfWidth())
+            pos.x = worldBounds.getRight() - getHalfWidth();
     }
 
     public boolean keyDown(int keyCode) {
