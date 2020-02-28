@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.geekbrains.math.Rect;
+import ru.geekbrains.utils.Regions;
 
 public abstract class Sprite extends Rect {
 
@@ -21,6 +22,12 @@ public abstract class Sprite extends Rect {
         if(region == null)
             throw new IllegalArgumentException("Текстура не была задана (null).");
         this.regions = new TextureRegion[]{region};
+    }
+
+    public Sprite(TextureRegion region, int rows, int cols, int frames) {
+        if(region == null)
+            throw new IllegalArgumentException("Текстура не была задана (null).");
+        this.regions = Regions.split(region, rows, cols, frames);
     }
 
     public void draw(SpriteBatch batch) {

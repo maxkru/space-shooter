@@ -24,8 +24,7 @@ public class PlayerShip extends Sprite {
     private static final float VELOCITY = 0.005f;
 
     public PlayerShip(TextureAtlas atlas) {
-        super(atlas.findRegion("main_ship"));
-        regions[0].setRegionWidth(regions[0].getRegionWidth() / 2);
+        super(atlas.findRegion("main_ship"), 1 , 2, 2);
 
         v = new Vector2();
         attractor = new Vector2();
