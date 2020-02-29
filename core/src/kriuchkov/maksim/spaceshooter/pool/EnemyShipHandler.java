@@ -1,5 +1,6 @@
 package kriuchkov.maksim.spaceshooter.pool;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 
@@ -17,8 +18,8 @@ public class EnemyShipHandler {
 
     private Vector2 v;
 
-    public EnemyShipHandler(EnemyShipPool enemyShipPool, TextureAtlas atlas) {
-        this.enemyShipPool = enemyShipPool;
+    public EnemyShipHandler(TextureAtlas atlas) {
+        enemyShipPool = new EnemyShipPool();
         this.atlas = atlas;
         v = new Vector2(0f, -0.05f);
         spawnLocation = new Vector2();
@@ -43,5 +44,17 @@ public class EnemyShipHandler {
 
         }
         enemyShipPool.updateAllActive(delta);
+    }
+
+    public void dispose() {
+        enemyShipPool.dispose();
+    }
+
+    public void drawAllActive(SpriteBatch batch) {
+        enemyShipPool.drawAllActive(batch);
+    }
+
+    public void freeAllDestroyedActiveObjects() {
+        enemyShipPool.freeAllDestroyedActiveObjects();
     }
 }

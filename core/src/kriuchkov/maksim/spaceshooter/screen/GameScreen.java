@@ -29,7 +29,6 @@ public class GameScreen extends BaseScreen {
 
     private Star[] stars;
 
-    private EnemyShipPool enemyShipPool;
     private BulletPool bulletPool;
     private EnemyShipHandler enemyShipHandler;
 
@@ -44,8 +43,7 @@ public class GameScreen extends BaseScreen {
         atlas = new TextureAtlas("textures/texture_atlas.atlas");
         atlasMain = new TextureAtlas("textures/mainAtlas.tpack");
         bulletPool = new BulletPool(20);
-        enemyShipPool = new EnemyShipPool();
-        enemyShipHandler = new EnemyShipHandler(enemyShipPool, atlasMain);
+        enemyShipHandler = new EnemyShipHandler(atlasMain);
         playerShip = new PlayerShip(atlasMain, bulletPool);
         bg = new Texture("background_simple.png");
         background = new Background(bg);
@@ -113,7 +111,7 @@ public class GameScreen extends BaseScreen {
         bulletPool.dispose();
         playerShip.dispose();
         gameMusic.dispose();
-        enemyShipPool.dispose();
+        enemyShipHandler.dispose();
     }
 
     private void update(float delta) {
@@ -135,13 +133,13 @@ public class GameScreen extends BaseScreen {
         for(Star star : stars)
             star.draw(batch);
         bulletPool.drawAllActive(batch);
-        enemyShipPool.drawAllActive(batch);
+        enemyShipHandler.drawAllActive(batch);
         playerShip.draw(batch);
         batch.end();
     }
 
     private void freeAllDestroyed() {
         bulletPool.freeAllDestroyedActiveObjects();
-        enemyShipPool.freeAllDestroyedActiveObjects();
+        enemyShipHandler.freeAllDestroyedActiveObjects();
     }
 }
