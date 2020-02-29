@@ -11,7 +11,7 @@ public abstract class SpritePool<T extends Sprite> {
     private List<T> activeObjects;
     private List<T> freeObjects;
 
-    SpritePool() {
+    public SpritePool() {
         activeObjects = new ArrayList<>();
         freeObjects = new ArrayList<>();
     }
