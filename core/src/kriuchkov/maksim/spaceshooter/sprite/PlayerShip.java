@@ -21,7 +21,7 @@ public class PlayerShip extends Sprite {
 
     private Rect worldBounds;
 
-    private static final float VELOCITY = 0.005f;
+    private static final float VELOCITY = 0.25f;
 
     public PlayerShip(TextureAtlas atlas) {
         super(atlas.findRegion("main_ship"), 1 , 2, 2);
@@ -63,9 +63,9 @@ public class PlayerShip extends Sprite {
 
     @Override
     public void update(float delta) {
-        if(movingByTouch && !attractor.epsilonEquals(pos, VELOCITY)) {
+        if(movingByTouch && !attractor.epsilonEquals(pos, VELOCITY * delta / 2f)) {
             v.set(attractor).sub(pos).setLength(VELOCITY);
-            pos.add(v);
+            pos.mulAdd(v, delta);
         } else if (movingByKeyboard) {
             keyMovementDirection.set(0,0);
             if (movingDown)
@@ -77,7 +77,7 @@ public class PlayerShip extends Sprite {
             if (movingRight)
                 keyMovementDirection.add(1f,0);
             keyMovementDirection.setLength(VELOCITY);
-            pos.add(keyMovementDirection);
+            pos.mulAdd(keyMovementDirection, delta);
         }
 
         if (pos.y > -getHalfHeight())
