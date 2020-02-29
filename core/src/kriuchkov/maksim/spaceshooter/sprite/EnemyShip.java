@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 
 import kriuchkov.maksim.spaceshooter.base.Sprite;
 import ru.geekbrains.math.Rect;
+import ru.geekbrains.utils.Regions;
 
 public class EnemyShip extends Sprite {
 
@@ -12,11 +13,11 @@ public class EnemyShip extends Sprite {
     private int hp;
 
     public EnemyShip() {
-
+        
     }
 
     public void set(TextureRegion region, Vector2 pos, Vector2 v, float heightProportion, Rect worldBounds, int hp) {
-        regions[0] = region;
+        regions = Regions.split(region, 1, 2,2);
         this.pos.set(pos);
         this.v.set(v);
         setHeightProportion(heightProportion);

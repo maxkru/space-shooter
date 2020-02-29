@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 
 import kriuchkov.maksim.spaceshooter.base.BaseScreen;
 import kriuchkov.maksim.spaceshooter.pool.BulletPool;
+import kriuchkov.maksim.spaceshooter.pool.EnemyShipHandler;
 import kriuchkov.maksim.spaceshooter.pool.EnemyShipPool;
 import kriuchkov.maksim.spaceshooter.sprite.Background;
 import kriuchkov.maksim.spaceshooter.sprite.PlayerShip;
@@ -30,6 +31,7 @@ public class GameScreen extends BaseScreen {
 
     private EnemyShipPool enemyShipPool;
     private BulletPool bulletPool;
+    private EnemyShipHandler enemyShipHandler;
 
     private Music gameMusic;
 
@@ -43,6 +45,7 @@ public class GameScreen extends BaseScreen {
         atlasMain = new TextureAtlas("textures/mainAtlas.tpack");
         bulletPool = new BulletPool(20);
         enemyShipPool = new EnemyShipPool();
+        enemyShipHandler = new EnemyShipHandler(enemyShipPool, atlasMain);
         playerShip = new PlayerShip(atlasMain, bulletPool);
         bg = new Texture("background_simple.png");
         background = new Background(bg);
@@ -97,6 +100,7 @@ public class GameScreen extends BaseScreen {
         super.resize(worldBounds);
         background.resize(worldBounds);
         playerShip.resize(worldBounds);
+        enemyShipHandler.setWorldBounds(worldBounds);
         for(Star star : stars)
             star.resize(worldBounds);
     }
@@ -118,7 +122,7 @@ public class GameScreen extends BaseScreen {
         for(Star star : stars)
             star.update(delta);
 
-        enemyShipPool.updateAllActive(delta);
+        enemyShipHandler.update(delta);
 
         bulletPool.updateAllActive(delta);
     }

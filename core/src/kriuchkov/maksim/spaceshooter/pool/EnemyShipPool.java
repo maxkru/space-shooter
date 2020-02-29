@@ -10,5 +10,4 @@ public class EnemyShipPool extends SpritePool<EnemyShip> {
         return new EnemyShip();
     }
 
-
 }
