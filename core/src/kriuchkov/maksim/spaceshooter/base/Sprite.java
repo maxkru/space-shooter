@@ -88,7 +88,7 @@ public abstract class Sprite extends Rect {
         destroyed = true;
     }
 
-    public void reuse() {
+    public void flushDestroyed() {
         destroyed = false;
     }
 
