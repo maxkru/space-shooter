@@ -10,7 +10,7 @@ import ru.geekbrains.utils.Regions;
 
 public abstract class Sprite extends Rect {
 
-    protected Vector2 v;
+    protected Vector2 v = new Vector2();
 
     protected float angle = 0f;
     protected float scale = 1f;

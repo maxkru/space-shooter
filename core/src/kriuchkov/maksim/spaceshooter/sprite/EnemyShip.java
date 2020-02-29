@@ -6,36 +6,32 @@ import com.badlogic.gdx.math.Vector2;
 import kriuchkov.maksim.spaceshooter.base.Sprite;
 import ru.geekbrains.math.Rect;
 
-public class Bullet extends Sprite {
+public class EnemyShip extends Sprite {
 
     private Rect worldBounds;
-    private int damage;
+    private int hp;
 
-    private Sprite owner;
+    public EnemyShip() {
 
-    public Bullet() {
-        regions = new TextureRegion[1];
     }
 
-    public void set(Sprite owner, TextureRegion region, Vector2 pos, Vector2 v, float heightProportion, Rect worldBounds, int damage) {
-        this.owner = owner;
+    public void set(TextureRegion region, Vector2 pos, Vector2 v, float heightProportion, Rect worldBounds, int hp) {
         regions[0] = region;
         this.pos.set(pos);
         this.v.set(v);
         setHeightProportion(heightProportion);
         this.worldBounds = worldBounds;
-        this.damage = damage;
-
+        this.hp = hp;
     }
 
     @Override
     public void update(float delta) {
         this.pos.mulAdd(v, delta);
-        if (isOutside(worldBounds))
+        if (worldBounds.getBottom() > getTop())
             destroy();
     }
 
-    public int getDamage() {
-        return damage;
+    public int getHp() {
+        return hp;
     }
 }

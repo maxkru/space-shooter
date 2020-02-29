@@ -9,10 +9,8 @@ import com.badlogic.gdx.math.Vector2;
 
 import kriuchkov.maksim.spaceshooter.base.BaseScreen;
 import kriuchkov.maksim.spaceshooter.pool.BulletPool;
+import kriuchkov.maksim.spaceshooter.pool.EnemyShipPool;
 import kriuchkov.maksim.spaceshooter.sprite.Background;
-import kriuchkov.maksim.spaceshooter.sprite.ButtonExit;
-import kriuchkov.maksim.spaceshooter.sprite.ButtonStart;
-import kriuchkov.maksim.spaceshooter.sprite.Circle;
 import kriuchkov.maksim.spaceshooter.sprite.PlayerShip;
 import kriuchkov.maksim.spaceshooter.sprite.Star;
 import ru.geekbrains.math.Rect;
@@ -30,6 +28,7 @@ public class GameScreen extends BaseScreen {
 
     private Star[] stars;
 
+    private EnemyShipPool enemyShipPool;
     private BulletPool bulletPool;
 
     private Music gameMusic;
@@ -43,6 +42,7 @@ public class GameScreen extends BaseScreen {
         atlas = new TextureAtlas("textures/texture_atlas.atlas");
         atlasMain = new TextureAtlas("textures/mainAtlas.tpack");
         bulletPool = new BulletPool(20);
+        enemyShipPool = new EnemyShipPool();
         playerShip = new PlayerShip(atlasMain, bulletPool);
         bg = new Texture("background_simple.png");
         background = new Background(bg);
@@ -109,6 +109,7 @@ public class GameScreen extends BaseScreen {
         bulletPool.dispose();
         playerShip.dispose();
         gameMusic.dispose();
+        enemyShipPool.dispose();
     }
 
     private void update(float delta) {
@@ -116,6 +117,8 @@ public class GameScreen extends BaseScreen {
 
         for(Star star : stars)
             star.update(delta);
+
+        enemyShipPool.updateAllActive(delta);
 
         bulletPool.updateAllActive(delta);
     }
@@ -128,11 +131,13 @@ public class GameScreen extends BaseScreen {
         for(Star star : stars)
             star.draw(batch);
         bulletPool.drawAllActive(batch);
+        enemyShipPool.drawAllActive(batch);
         playerShip.draw(batch);
         batch.end();
     }
 
     private void freeAllDestroyed() {
         bulletPool.freeAllDestroyedActiveObjects();
+        enemyShipPool.freeAllDestroyedActiveObjects();
     }
 }

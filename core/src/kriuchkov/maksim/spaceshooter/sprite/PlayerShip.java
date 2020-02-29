@@ -47,7 +47,6 @@ public class PlayerShip extends Sprite {
     public PlayerShip(TextureAtlas atlas, BulletPool bulletPool) {
         super(atlas.findRegion("main_ship"), 1 , 2, 2);
 
-        v = new Vector2();
         attractor = new Vector2();
         keyMovementDirection = new Vector2();
 

@@ -72,4 +72,8 @@ public abstract class SpritePool<T extends Sprite> {
         freeObjects.clear();
         activeObjects.clear();
     }
+
+    public int getActiveCount() {
+        return activeObjects.size();
+    }
 }
