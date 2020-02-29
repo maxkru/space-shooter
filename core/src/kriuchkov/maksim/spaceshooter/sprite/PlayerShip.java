@@ -33,10 +33,15 @@ public class PlayerShip extends Sprite {
     private Vector2 bulletV;
     private Vector2 bulletEmitterPos;
 
+    private boolean isShooting;
+
 
     private static final float SHIP_VELOCITY = 0.25f;
     private static final float BULLET_VELOCITY = 0.4f;
 
+    private static final float DELAY_BETWEEN_SHOTS = 0.1f;
+
+    private float sinceLastShot;
 
 
     public PlayerShip(TextureAtlas atlas, BulletPool bulletPool) {
@@ -57,6 +62,9 @@ public class PlayerShip extends Sprite {
         bulletEmitterPos = new Vector2();
 
         bulletFireSound = Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
+
+        sinceLastShot = 0f;
+        isShooting = false;
     }
 
     @Override
@@ -114,6 +122,13 @@ public class PlayerShip extends Sprite {
             pos.x = worldBounds.getLeft() + getHalfWidth();
         else if (pos.x > worldBounds.getRight() - getHalfWidth())
             pos.x = worldBounds.getRight() - getHalfWidth();
+
+        if (sinceLastShot < DELAY_BETWEEN_SHOTS)
+            sinceLastShot += delta;
+        if (isShooting && sinceLastShot >= DELAY_BETWEEN_SHOTS) {
+            shoot();
+            sinceLastShot -= DELAY_BETWEEN_SHOTS;
+        }
     }
 
     public boolean keyDown(int keyCode) {
@@ -133,7 +148,7 @@ public class PlayerShip extends Sprite {
                 movingLeft = true;
                 break;
             case Input.Keys.SPACE:
-                shoot();
+                isShooting = true;
         }
 
         return true;
@@ -152,6 +167,9 @@ public class PlayerShip extends Sprite {
                 break;
             case Input.Keys.LEFT:
                 movingLeft = false;
+                break;
+            case Input.Keys.SPACE:
+                isShooting = false;
         }
         if (!movingRight && !movingLeft && !movingUp && !movingDown)
             movingByKeyboard = false;
