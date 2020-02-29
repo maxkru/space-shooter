@@ -1,6 +1,7 @@
 package kriuchkov.maksim.spaceshooter.screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -31,6 +32,8 @@ public class GameScreen extends BaseScreen {
 
     private BulletPool bulletPool;
 
+    private Music gameMusic;
+
     private static final int STAR_COUNT = 32;
 
     @Override
@@ -49,7 +52,9 @@ public class GameScreen extends BaseScreen {
             stars[i] = new Star(atlas);
         }
 
-
+        gameMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/music.mp3"));
+        gameMusic.setLooping(true);
+        gameMusic.play();
     }
 
     @Override
@@ -102,6 +107,8 @@ public class GameScreen extends BaseScreen {
         atlas.dispose();
         bg.dispose();
         bulletPool.dispose();
+        playerShip.dispose();
+        gameMusic.dispose();
     }
 
     private void update(float delta) {

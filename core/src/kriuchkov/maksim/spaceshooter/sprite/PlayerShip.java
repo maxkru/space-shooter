@@ -1,6 +1,8 @@
 package kriuchkov.maksim.spaceshooter.sprite;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -26,10 +28,16 @@ public class PlayerShip extends Sprite {
     private BulletPool bulletPool;
     private TextureRegion bulletTextureRegion;
 
+    private Sound bulletFireSound;
+
+    private Vector2 bulletV;
+    private Vector2 bulletEmitterPos;
+
+
     private static final float SHIP_VELOCITY = 0.25f;
     private static final float BULLET_VELOCITY = 0.4f;
 
-    private Vector2 bulletV;
+
 
     public PlayerShip(TextureAtlas atlas, BulletPool bulletPool) {
         super(atlas.findRegion("main_ship"), 1 , 2, 2);
@@ -37,12 +45,18 @@ public class PlayerShip extends Sprite {
         v = new Vector2();
         attractor = new Vector2();
         keyMovementDirection = new Vector2();
+
         pos.set(0, -0.25f);
+
         movingByTouch = false;
         movingByKeyboard = false;
+
         this.bulletPool = bulletPool;
         bulletTextureRegion = atlas.findRegion("bulletMainShip");
         bulletV = new Vector2(0, BULLET_VELOCITY);
+        bulletEmitterPos = new Vector2();
+
+        bulletFireSound = Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
     }
 
     @Override
@@ -147,6 +161,12 @@ public class PlayerShip extends Sprite {
 
     private void shoot() {
         Bullet bullet = bulletPool.obtain();
-        bullet.set(this, bulletTextureRegion, this.pos, bulletV, 0.01f, worldBounds, 1);
+        bulletEmitterPos.set(pos.x, pos.y + getHeight() * 0.45f);
+        bullet.set(this, bulletTextureRegion, bulletEmitterPos, bulletV, 0.01f, worldBounds, 1);
+        bulletFireSound.play(0.2f);
+    }
+
+    public void dispose() {
+        bulletFireSound.dispose();
     }
 }
