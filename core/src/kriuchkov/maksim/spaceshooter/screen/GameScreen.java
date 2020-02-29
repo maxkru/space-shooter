@@ -39,7 +39,7 @@ public class GameScreen extends BaseScreen {
 
         atlas = new TextureAtlas("textures/texture_atlas.atlas");
         atlasMain = new TextureAtlas("textures/mainAtlas.tpack");
-        bulletPool = new BulletPool();
+        bulletPool = new BulletPool(20);
         playerShip = new PlayerShip(atlasMain, bulletPool);
         bg = new Texture("background_simple.png");
         background = new Background(bg);

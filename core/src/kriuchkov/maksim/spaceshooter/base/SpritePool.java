@@ -16,6 +16,15 @@ public abstract class SpritePool<T extends Sprite> {
         freeObjects = new ArrayList<>();
     }
 
+    public SpritePool(int initialFree) {
+        activeObjects = new ArrayList<>();
+        freeObjects = new ArrayList<>();
+
+        for (int i = 0; i < initialFree; i++) {
+            freeObjects.add(createNewObject());
+        }
+    }
+
     protected abstract T createNewObject();
 
     public T obtain() {
@@ -25,6 +34,7 @@ public abstract class SpritePool<T extends Sprite> {
         else
             object = freeObjects.remove(freeObjects.size() - 1);
         activeObjects.add(object);
+        System.out.printf("%s: active/free %d/%d", getClass().getName(), activeObjects.size(), freeObjects.size());
         return object;
     }
 
