@@ -56,6 +56,7 @@ public class PlayerShip extends Sprite {
 
     @Override
     public boolean touchDragged(Vector2 touch, int pointer) {
+        movingByTouch = true; // TODO: implement better multi-touch solution
         attractor.set(touch);
         return super.touchDragged(touch, pointer);
     }
