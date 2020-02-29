@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 
 import kriuchkov.maksim.spaceshooter.base.BaseScreen;
+import kriuchkov.maksim.spaceshooter.pool.BulletPool;
 import kriuchkov.maksim.spaceshooter.sprite.Background;
 import kriuchkov.maksim.spaceshooter.sprite.ButtonExit;
 import kriuchkov.maksim.spaceshooter.sprite.ButtonStart;
@@ -28,6 +29,8 @@ public class GameScreen extends BaseScreen {
 
     private Star[] stars;
 
+    private BulletPool bulletPool;
+
     private static final int STAR_COUNT = 32;
 
     @Override
@@ -36,7 +39,8 @@ public class GameScreen extends BaseScreen {
 
         atlas = new TextureAtlas("textures/texture_atlas.atlas");
         atlasMain = new TextureAtlas("textures/mainAtlas.tpack");
-        playerShip = new PlayerShip(atlasMain);
+        bulletPool = new BulletPool();
+        playerShip = new PlayerShip(atlasMain, bulletPool);
         bg = new Texture("background_simple.png");
         background = new Background(bg);
 
@@ -44,6 +48,7 @@ public class GameScreen extends BaseScreen {
         for(int i = 0; i < STAR_COUNT; i++) {
             stars[i] = new Star(atlas);
         }
+
 
     }
 
@@ -78,6 +83,7 @@ public class GameScreen extends BaseScreen {
     @Override
     public void render(float delta) {
         update(delta);
+        freeAllDestroyed();
         draw();
     }
 
@@ -95,12 +101,16 @@ public class GameScreen extends BaseScreen {
         super.dispose();
         atlas.dispose();
         bg.dispose();
+        bulletPool.dispose();
     }
 
     private void update(float delta) {
         playerShip.update(delta);
+
         for(Star star : stars)
             star.update(delta);
+
+        bulletPool.updateAllActive(delta);
     }
 
     private void draw() {
@@ -110,7 +120,12 @@ public class GameScreen extends BaseScreen {
         background.draw(batch);
         for(Star star : stars)
             star.draw(batch);
+        bulletPool.drawAllActive(batch);
         playerShip.draw(batch);
         batch.end();
+    }
+
+    private void freeAllDestroyed() {
+        bulletPool.freeAllDestroyedActiveObjects();
     }
 }

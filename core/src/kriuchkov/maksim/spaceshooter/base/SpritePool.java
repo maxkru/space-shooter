@@ -43,14 +43,12 @@ public abstract class SpritePool<T extends Sprite> {
     }
 
     public void freeAllDestroyedActiveObjects() {
-        Iterator<T> it = activeObjects.iterator();
-        T obj;
-        while(it.hasNext()) {
-            obj = it.next();
+        for(int i = 0; i < activeObjects.size(); i++) {
+            T obj = activeObjects.get(i);
             if (obj.isDestroyed()) {
                 free(obj);
                 obj.flushDestroyed();
-                it.remove();
+                i--;
             }
         }
     }
@@ -58,5 +56,10 @@ public abstract class SpritePool<T extends Sprite> {
     private void free(T obj) {
         if (activeObjects.remove(obj))
             freeObjects.add(obj);
+    }
+
+    public void dispose() {
+        freeObjects.clear();
+        activeObjects.clear();
     }
 }
