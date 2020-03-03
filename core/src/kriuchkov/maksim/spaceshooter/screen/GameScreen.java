@@ -1,16 +1,17 @@
 package kriuchkov.maksim.spaceshooter.screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 
 import kriuchkov.maksim.spaceshooter.base.BaseScreen;
+import kriuchkov.maksim.spaceshooter.pool.BulletPool;
+import kriuchkov.maksim.spaceshooter.pool.EnemyShipHandler;
+import kriuchkov.maksim.spaceshooter.pool.EnemyShipPool;
 import kriuchkov.maksim.spaceshooter.sprite.Background;
-import kriuchkov.maksim.spaceshooter.sprite.ButtonExit;
-import kriuchkov.maksim.spaceshooter.sprite.ButtonStart;
-import kriuchkov.maksim.spaceshooter.sprite.Circle;
 import kriuchkov.maksim.spaceshooter.sprite.PlayerShip;
 import kriuchkov.maksim.spaceshooter.sprite.Star;
 import ru.geekbrains.math.Rect;
@@ -28,6 +29,11 @@ public class GameScreen extends BaseScreen {
 
     private Star[] stars;
 
+    private BulletPool bulletPool;
+    private EnemyShipHandler enemyShipHandler;
+
+    private Music gameMusic;
+
     private static final int STAR_COUNT = 32;
 
     @Override
@@ -36,7 +42,9 @@ public class GameScreen extends BaseScreen {
 
         atlas = new TextureAtlas("textures/texture_atlas.atlas");
         atlasMain = new TextureAtlas("textures/mainAtlas.tpack");
-        playerShip = new PlayerShip(atlasMain);
+        bulletPool = new BulletPool(20);
+        enemyShipHandler = new EnemyShipHandler(atlasMain);
+        playerShip = new PlayerShip(atlasMain, bulletPool);
         bg = new Texture("background_simple.png");
         background = new Background(bg);
 
@@ -45,6 +53,9 @@ public class GameScreen extends BaseScreen {
             stars[i] = new Star(atlas);
         }
 
+        gameMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/music.mp3"));
+        gameMusic.setLooping(true);
+        gameMusic.play();
     }
 
     @Override
@@ -78,6 +89,7 @@ public class GameScreen extends BaseScreen {
     @Override
     public void render(float delta) {
         update(delta);
+        freeAllDestroyed();
         draw();
     }
 
@@ -86,6 +98,7 @@ public class GameScreen extends BaseScreen {
         super.resize(worldBounds);
         background.resize(worldBounds);
         playerShip.resize(worldBounds);
+        enemyShipHandler.setWorldBounds(worldBounds);
         for(Star star : stars)
             star.resize(worldBounds);
     }
@@ -95,12 +108,21 @@ public class GameScreen extends BaseScreen {
         super.dispose();
         atlas.dispose();
         bg.dispose();
+        bulletPool.dispose();
+        playerShip.dispose();
+        gameMusic.dispose();
+        enemyShipHandler.dispose();
     }
 
     private void update(float delta) {
         playerShip.update(delta);
+
         for(Star star : stars)
             star.update(delta);
+
+        enemyShipHandler.update(delta);
+
+        bulletPool.updateAllActive(delta);
     }
 
     private void draw() {
@@ -110,7 +132,14 @@ public class GameScreen extends BaseScreen {
         background.draw(batch);
         for(Star star : stars)
             star.draw(batch);
+        bulletPool.drawAllActive(batch);
+        enemyShipHandler.drawAllActive(batch);
         playerShip.draw(batch);
         batch.end();
+    }
+
+    private void freeAllDestroyed() {
+        bulletPool.freeAllDestroyedActiveObjects();
+        enemyShipHandler.freeAllDestroyedActiveObjects();
     }
 }

@@ -1,10 +1,14 @@
 package kriuchkov.maksim.spaceshooter.sprite;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import kriuchkov.maksim.spaceshooter.base.Sprite;
+import kriuchkov.maksim.spaceshooter.pool.BulletPool;
 import ru.geekbrains.math.Rect;
 
 public class PlayerShip extends Sprite {
@@ -21,18 +25,45 @@ public class PlayerShip extends Sprite {
 
     private Rect worldBounds;
 
-    private static final float VELOCITY = 0.005f;
+    private BulletPool bulletPool;
+    private TextureRegion bulletTextureRegion;
 
-    public PlayerShip(TextureAtlas atlas) {
-        super(atlas.findRegion("main_ship"));
-        regions[0].setRegionWidth(regions[0].getRegionWidth() / 2);
+    private Sound bulletFireSound;
 
-        v = new Vector2();
+    private Vector2 bulletV;
+    private Vector2 bulletEmitterPos;
+
+    private boolean isShooting;
+
+
+    private static final float SHIP_VELOCITY = 0.25f;
+    private static final float BULLET_VELOCITY = 0.4f;
+
+    private static final float DELAY_BETWEEN_SHOTS = 0.1f;
+
+    private float sinceLastShot;
+
+
+    public PlayerShip(TextureAtlas atlas, BulletPool bulletPool) {
+        super(atlas.findRegion("main_ship"), 1 , 2, 2);
+
         attractor = new Vector2();
         keyMovementDirection = new Vector2();
+
         pos.set(0, -0.25f);
+
         movingByTouch = false;
         movingByKeyboard = false;
+
+        this.bulletPool = bulletPool;
+        bulletTextureRegion = atlas.findRegion("bulletMainShip");
+        bulletV = new Vector2(0, BULLET_VELOCITY);
+        bulletEmitterPos = new Vector2();
+
+        bulletFireSound = Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
+
+        sinceLastShot = 0f;
+        isShooting = false;
     }
 
     @Override
@@ -57,15 +88,16 @@ public class PlayerShip extends Sprite {
 
     @Override
     public boolean touchDragged(Vector2 touch, int pointer) {
+        movingByTouch = true; // TODO: implement better multi-touch solution
         attractor.set(touch);
         return super.touchDragged(touch, pointer);
     }
 
     @Override
     public void update(float delta) {
-        if(movingByTouch && !attractor.epsilonEquals(pos, VELOCITY)) {
-            v.set(attractor).sub(pos).setLength(VELOCITY);
-            pos.add(v);
+        if(movingByTouch && !attractor.epsilonEquals(pos, SHIP_VELOCITY * delta / 2f)) {
+            v.set(attractor).sub(pos).setLength(SHIP_VELOCITY);
+            pos.mulAdd(v, delta);
         } else if (movingByKeyboard) {
             keyMovementDirection.set(0,0);
             if (movingDown)
@@ -76,8 +108,8 @@ public class PlayerShip extends Sprite {
                 keyMovementDirection.add(-1f,0);
             if (movingRight)
                 keyMovementDirection.add(1f,0);
-            keyMovementDirection.setLength(VELOCITY);
-            pos.add(keyMovementDirection);
+            keyMovementDirection.setLength(SHIP_VELOCITY);
+            pos.mulAdd(keyMovementDirection, delta);
         }
 
         if (pos.y > -getHalfHeight())
@@ -89,6 +121,13 @@ public class PlayerShip extends Sprite {
             pos.x = worldBounds.getLeft() + getHalfWidth();
         else if (pos.x > worldBounds.getRight() - getHalfWidth())
             pos.x = worldBounds.getRight() - getHalfWidth();
+
+        if (sinceLastShot < DELAY_BETWEEN_SHOTS)
+            sinceLastShot += delta;
+        if (isShooting && sinceLastShot >= DELAY_BETWEEN_SHOTS) {
+            shoot();
+            sinceLastShot -= DELAY_BETWEEN_SHOTS;
+        }
     }
 
     public boolean keyDown(int keyCode) {
@@ -106,6 +145,9 @@ public class PlayerShip extends Sprite {
                 break;
             case Input.Keys.LEFT:
                 movingLeft = true;
+                break;
+            case Input.Keys.SPACE:
+                isShooting = true;
         }
 
         return true;
@@ -124,10 +166,24 @@ public class PlayerShip extends Sprite {
                 break;
             case Input.Keys.LEFT:
                 movingLeft = false;
+                break;
+            case Input.Keys.SPACE:
+                isShooting = false;
         }
         if (!movingRight && !movingLeft && !movingUp && !movingDown)
             movingByKeyboard = false;
 
         return true;
+    }
+
+    private void shoot() {
+        Bullet bullet = bulletPool.obtain();
+        bulletEmitterPos.set(pos.x, pos.y + getHeight() * 0.45f);
+        bullet.set(this, bulletTextureRegion, bulletEmitterPos, bulletV, 0.01f, worldBounds, 1);
+        bulletFireSound.play(0.2f);
+    }
+
+    public void dispose() {
+        bulletFireSound.dispose();
     }
 }

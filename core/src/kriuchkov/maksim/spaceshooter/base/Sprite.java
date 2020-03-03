@@ -6,21 +6,34 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.geekbrains.math.Rect;
+import ru.geekbrains.utils.Regions;
 
 public abstract class Sprite extends Rect {
 
-    protected Vector2 v;
+    protected Vector2 v = new Vector2();
 
-    protected float angle;
+    protected float angle = 0f;
     protected float scale = 1f;
 
     protected TextureRegion[] regions;
     protected int frame;
 
+    private boolean destroyed;
+
+    public Sprite() {
+
+    }
+
     public Sprite(TextureRegion region) {
         if(region == null)
             throw new IllegalArgumentException("Текстура не была задана (null).");
         this.regions = new TextureRegion[]{region};
+    }
+
+    public Sprite(TextureRegion region, int rows, int cols, int frames) {
+        if(region == null)
+            throw new IllegalArgumentException("Текстура не была задана (null).");
+        this.regions = Regions.split(region, rows, cols, frames);
     }
 
     public void draw(SpriteBatch batch) {
@@ -65,9 +78,21 @@ public abstract class Sprite extends Rect {
         this.scale = scale;
     }
 
-    public void setHeightProportion(float height) {
+    protected void setHeightProportion(float height) {
         setHeight(height);
         float aspect = regions[frame].getRegionWidth() / (float) regions[frame].getRegionHeight();
         setWidth(height * aspect);
+    }
+
+    public void destroy() {
+        destroyed = true;
+    }
+
+    public void flushDestroyed() {
+        destroyed = false;
+    }
+
+    public boolean isDestroyed() {
+        return destroyed;
     }
 }
