@@ -142,4 +142,14 @@ public class GameScreen extends BaseScreen {
         bulletPool.freeAllDestroyedActiveObjects();
         enemyShipHandler.freeAllDestroyedActiveObjects();
     }
+
+    @Override
+    public void pause() {
+        gameMusic.pause();
+    }
+
+    @Override
+    public void resume() {
+        gameMusic.play();
+    }
 }
