@@ -9,8 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 
 import kriuchkov.maksim.spaceshooter.base.BaseScreen;
 import kriuchkov.maksim.spaceshooter.pool.BulletPool;
-import kriuchkov.maksim.spaceshooter.pool.EnemyShipHandler;
-import kriuchkov.maksim.spaceshooter.pool.EnemyShipPool;
+import kriuchkov.maksim.spaceshooter.utils.EnemyShipHandler;
 import kriuchkov.maksim.spaceshooter.sprite.Background;
 import kriuchkov.maksim.spaceshooter.sprite.PlayerShip;
 import kriuchkov.maksim.spaceshooter.sprite.Star;
@@ -43,7 +42,7 @@ public class GameScreen extends BaseScreen {
         atlas = new TextureAtlas("textures/texture_atlas.atlas");
         atlasMain = new TextureAtlas("textures/mainAtlas.tpack");
         bulletPool = new BulletPool(20);
-        enemyShipHandler = new EnemyShipHandler(atlasMain);
+        enemyShipHandler = new EnemyShipHandler(atlasMain, bulletPool);
         playerShip = new PlayerShip(atlasMain, bulletPool);
         bg = new Texture("background_simple.png");
         background = new Background(bg);

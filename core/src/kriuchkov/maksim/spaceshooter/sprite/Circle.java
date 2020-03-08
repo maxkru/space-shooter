@@ -18,7 +18,6 @@ public class Circle extends Sprite {
 
     public Circle(TextureAtlas atlas) {
         super(atlas.findRegion("circle"));
-        v = new Vector2();
         attractor = new Vector2();
         pos.set(0,0);
     }

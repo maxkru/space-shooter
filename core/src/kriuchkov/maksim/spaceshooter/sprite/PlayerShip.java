@@ -7,11 +7,11 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
-import kriuchkov.maksim.spaceshooter.base.Sprite;
+import kriuchkov.maksim.spaceshooter.base.Ship;
 import kriuchkov.maksim.spaceshooter.pool.BulletPool;
 import ru.geekbrains.math.Rect;
 
-public class PlayerShip extends Sprite {
+public class PlayerShip extends Ship {
 
     private Vector2 attractor;
     private boolean movingByTouch;
@@ -23,25 +23,8 @@ public class PlayerShip extends Sprite {
     private boolean movingRight;
     private Vector2 keyMovementDirection;
 
-    private Rect worldBounds;
-
-    private BulletPool bulletPool;
-    private TextureRegion bulletTextureRegion;
-
-    private Sound bulletFireSound;
-
-    private Vector2 bulletV;
-    private Vector2 bulletEmitterPos;
-
-    private boolean isShooting;
-
-
     private static final float SHIP_VELOCITY = 0.25f;
     private static final float BULLET_VELOCITY = 0.4f;
-
-    private static final float DELAY_BETWEEN_SHOTS = 0.1f;
-
-    private float sinceLastShot;
 
 
     public PlayerShip(TextureAtlas atlas, BulletPool bulletPool) {
@@ -62,8 +45,14 @@ public class PlayerShip extends Sprite {
 
         bulletFireSound = Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
 
+        delayBetweenShots = 0.1f;
         sinceLastShot = 0f;
         isShooting = false;
+
+        bulletHeight = 0.01f;
+        bulletDamage = 1;
+
+        hp = 100;
     }
 
     @Override
@@ -95,6 +84,8 @@ public class PlayerShip extends Sprite {
 
     @Override
     public void update(float delta) {
+        super.update(delta);
+
         if(movingByTouch && !attractor.epsilonEquals(pos, SHIP_VELOCITY * delta / 2f)) {
             v.set(attractor).sub(pos).setLength(SHIP_VELOCITY);
             pos.mulAdd(v, delta);
@@ -122,12 +113,6 @@ public class PlayerShip extends Sprite {
         else if (pos.x > worldBounds.getRight() - getHalfWidth())
             pos.x = worldBounds.getRight() - getHalfWidth();
 
-        if (sinceLastShot < DELAY_BETWEEN_SHOTS)
-            sinceLastShot += delta;
-        if (isShooting && sinceLastShot >= DELAY_BETWEEN_SHOTS) {
-            shoot();
-            sinceLastShot -= DELAY_BETWEEN_SHOTS;
-        }
     }
 
     public boolean keyDown(int keyCode) {
@@ -176,14 +161,5 @@ public class PlayerShip extends Sprite {
         return true;
     }
 
-    private void shoot() {
-        Bullet bullet = bulletPool.obtain();
-        bulletEmitterPos.set(pos.x, pos.y + getHeight() * 0.45f);
-        bullet.set(this, bulletTextureRegion, bulletEmitterPos, bulletV, 0.01f, worldBounds, 1);
-        bulletFireSound.play(0.2f);
-    }
 
-    public void dispose() {
-        bulletFireSound.dispose();
-    }
 }
