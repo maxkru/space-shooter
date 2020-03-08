@@ -57,6 +57,11 @@ public class EnemyShip extends Ship {
             destroy();
     }
 
+    @Override
+    protected void updateBulletEmitterPos() {
+        bulletEmitterPos.set(pos.x, getBottom() + 0.01f);
+    }
+
     public int getHp() {
         return hp;
     }

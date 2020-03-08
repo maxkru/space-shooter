@@ -116,6 +116,11 @@ public class PlayerShip extends Ship {
 
     }
 
+    @Override
+    protected void updateBulletEmitterPos() {
+        bulletEmitterPos.set(pos.x, getTop() - 0.01f);
+    }
+
     public boolean keyDown(int keyCode) {
         movingByKeyboard = true;
 

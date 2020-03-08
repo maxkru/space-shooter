@@ -58,11 +58,10 @@ public class EnemyShipHandler {
 
     private void spawn() {
         EnemyShip ship = enemyShipPool.obtain();
-        spawnLocation.set(Rnd.nextFloat(worldBounds.getRight(), worldBounds.getLeft()), 0.6f);
         ship.set(
                 smallShipRegions,
                 bulletTextureRegion,
-                spawnLocation,
+                spawnLocation,  // unnecessary
                 v0,
                 SMALL_SHIP_HEIGHT,
                 SMALL_SHIP_HP,
@@ -70,6 +69,10 @@ public class EnemyShipHandler {
                 SMALL_BULLET_VELOCITY,
                 SMALL_BULLET_DAMAGE,
                 SMALL_SHIP_DELAY_BETWEEN_SHOTS
+        );
+        ship.pos.set(
+                Rnd.nextFloat(worldBounds.getRight() - ship.getHalfWidth(), worldBounds.getLeft() + ship.getHalfWidth()),
+                worldBounds.getTop() + ship.getHalfHeight()
         );
     }
 

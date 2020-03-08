@@ -49,7 +49,7 @@ public abstract class Ship extends Sprite {
 
     protected void shoot() {
         Bullet bullet = bulletPool.obtain();
-        bulletEmitterPos.set(pos.x, pos.y + getHeight() * 0.45f); // TODO
+        updateBulletEmitterPos();
         bullet.set(this, bulletTextureRegion, bulletEmitterPos, bulletV, bulletHeight, worldBounds, bulletDamage);
         bulletFireSound.play(bulletFireSoundVolume);
     }
@@ -57,4 +57,6 @@ public abstract class Ship extends Sprite {
     public void dispose() {
         bulletFireSound.dispose();
     }
+
+    protected abstract void updateBulletEmitterPos();
 }
