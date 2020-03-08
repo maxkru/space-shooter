@@ -24,6 +24,7 @@ public abstract class Ship extends Sprite {
     protected float sinceLastShot;
     protected float bulletHeight;
     protected int bulletDamage;
+    protected float bulletFireSoundVolume = 1f;
 
     protected int hp;
 
@@ -48,9 +49,9 @@ public abstract class Ship extends Sprite {
 
     protected void shoot() {
         Bullet bullet = bulletPool.obtain();
-        bulletEmitterPos.set(pos.x, pos.y + getHeight() * 0.45f);
+        bulletEmitterPos.set(pos.x, pos.y + getHeight() * 0.45f); // TODO
         bullet.set(this, bulletTextureRegion, bulletEmitterPos, bulletV, bulletHeight, worldBounds, bulletDamage);
-        bulletFireSound.play(0.2f);
+        bulletFireSound.play(bulletFireSoundVolume);
     }
 
     public void dispose() {

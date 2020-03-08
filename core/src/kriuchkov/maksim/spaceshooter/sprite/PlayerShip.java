@@ -44,6 +44,7 @@ public class PlayerShip extends Ship {
         bulletEmitterPos = new Vector2();
 
         bulletFireSound = Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
+        bulletFireSoundVolume = 0.05f;
 
         delayBetweenShots = 0.1f;
         sinceLastShot = 0f;

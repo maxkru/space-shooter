@@ -19,6 +19,8 @@ public class EnemyShip extends Ship {
 
         this.bulletV = new Vector2();
         this.bulletEmitterPos = new Vector2();
+
+        this.bulletFireSoundVolume = 0.1f;
     }
 
     public void set(
