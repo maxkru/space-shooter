@@ -12,6 +12,7 @@ import kriuchkov.maksim.spaceshooter.pool.EnemyShipPool;
 import kriuchkov.maksim.spaceshooter.pool.ExplosionPool;
 import kriuchkov.maksim.spaceshooter.sprite.Bullet;
 import kriuchkov.maksim.spaceshooter.sprite.EnemyShip;
+import kriuchkov.maksim.spaceshooter.sprite.PlayerShip;
 import ru.geekbrains.math.Rect;
 import ru.geekbrains.math.Rnd;
 import ru.geekbrains.utils.Regions;
@@ -155,5 +156,14 @@ public class EnemyShipHandler {
 
     public void freeAllDestroyedActiveObjects() {
         enemyShipPool.freeAllDestroyedActiveObjects();
+    }
+
+
+    public void checkCollisions(PlayerShip playerShip) {
+        for (EnemyShip enemyShip : enemyShipPool.getActiveObjects()) {
+            if (!enemyShip.isOutside(playerShip)) {
+                enemyShip.destroy();
+            }
+        }
     }
 }

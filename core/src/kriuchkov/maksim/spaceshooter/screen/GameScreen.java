@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Vector2;
 import kriuchkov.maksim.spaceshooter.base.BaseScreen;
 import kriuchkov.maksim.spaceshooter.pool.BulletPool;
 import kriuchkov.maksim.spaceshooter.pool.ExplosionPool;
+import kriuchkov.maksim.spaceshooter.sprite.EnemyShip;
 import kriuchkov.maksim.spaceshooter.utils.EnemyShipHandler;
 import kriuchkov.maksim.spaceshooter.sprite.Background;
 import kriuchkov.maksim.spaceshooter.sprite.PlayerShip;
@@ -130,6 +131,8 @@ public class GameScreen extends BaseScreen {
 
         enemyShipHandler.update(delta);
 
+        checkCollisions();
+
         bulletPool.updateAllActive(delta);
 
         explosionPool.updateAllActive(delta);
@@ -153,6 +156,10 @@ public class GameScreen extends BaseScreen {
         bulletPool.freeAllDestroyedActiveObjects();
         enemyShipHandler.freeAllDestroyedActiveObjects();
         explosionPool.freeAllDestroyedActiveObjects();
+    }
+
+    public void checkCollisions() {
+        enemyShipHandler.checkCollisions(playerShip);
     }
 
     @Override
