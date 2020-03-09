@@ -18,11 +18,31 @@ import ru.geekbrains.utils.Regions;
 public class EnemyShipHandler {
 
     private static final float SMALL_SHIP_HEIGHT = 0.1f;
+    private static final float SMALL_SHIP_VELOCITY = 0.15f;
     private static final float SMALL_BULLET_HEIGHT = 0.01f;
     private static final float SMALL_BULLET_VELOCITY = 0.3f;
     private static final int SMALL_BULLET_DAMAGE = 1;
     private static final float SMALL_SHIP_DELAY_BETWEEN_SHOTS = 2f;
     private static final int SMALL_SHIP_HP = 5;
+    private static final float SMALL_PROBABILITY = 0.5f;
+
+    private static final float MEDIUM_SHIP_HEIGHT = 0.15f;
+    private static final float MEDIUM_SHIP_VELOCITY = 0.05f;
+    private static final float MEDIUM_BULLET_HEIGHT = 0.02f;
+    private static final float MEDIUM_BULLET_VELOCITY = 0.25f;
+    private static final int MEDIUM_BULLET_DAMAGE = 4;
+    private static final float MEDIUM_SHIP_DELAY_BETWEEN_SHOTS = 2.5f;
+    private static final int MEDIUM_SHIP_HP = 40;
+    private static final float MEDIUM_PROBABILITY = 0.3f;
+
+    private static final float BIG_SHIP_HEIGHT = 0.2f;
+    private static final float BIG_SHIP_VELOCITY = 0.01f;
+    private static final float BIG_BULLET_HEIGHT = 0.04f;
+    private static final float BIG_BULLET_VELOCITY = 0.2f;
+    private static final int BIG_BULLET_DAMAGE = 10;
+    private static final float BIG_SHIP_DELAY_BETWEEN_SHOTS = 3f;
+    private static final int BIG_SHIP_HP = 100;
+    private static final float BIG_PROBABILITY = 0.2f;
 
     private EnemyShipPool enemyShipPool;
     private TextureAtlas atlas;
@@ -33,17 +53,26 @@ public class EnemyShipHandler {
     private float spawnTimer;
 
     private final TextureRegion[] smallShipRegions;
+    private final TextureRegion[] mediumShipRegions;
+    private final TextureRegion[] bigShipRegions;
     private TextureRegion bulletTextureRegion;
 
     private Vector2 spawnLocation;
 
-    private Vector2 v0;
+    private Vector2 vSmall;
+    private Vector2 vMedium;
+    private Vector2 vBig;
+
 
     public EnemyShipHandler(TextureAtlas atlas, BulletPool bulletPool) {
         this.atlas = atlas;
 
         this.smallShipRegions = Regions.split(atlas.findRegion("enemy0"), 1, 2, 2);
-        this.v0 = new Vector2(0f, -0.05f);
+        this.mediumShipRegions = Regions.split(atlas.findRegion("enemy1"), 1, 2, 2);
+        this.bigShipRegions = Regions.split(atlas.findRegion("enemy2"), 1, 2, 2);
+        this.vSmall = new Vector2(0f, -SMALL_SHIP_VELOCITY);
+        this.vMedium = new Vector2(0f, -MEDIUM_SHIP_VELOCITY);
+        this.vBig = new Vector2(0f, -BIG_SHIP_VELOCITY);
         this.spawnLocation = new Vector2();
         this.bulletTextureRegion = atlas.findRegion("bulletEnemy");
 
@@ -58,18 +87,47 @@ public class EnemyShipHandler {
 
     private void spawn() {
         EnemyShip ship = enemyShipPool.obtain();
-        ship.set(
-                smallShipRegions,
-                bulletTextureRegion,
-                spawnLocation,  // unnecessary
-                v0,
-                SMALL_SHIP_HEIGHT,
-                SMALL_SHIP_HP,
-                SMALL_BULLET_HEIGHT,
-                SMALL_BULLET_VELOCITY,
-                SMALL_BULLET_DAMAGE,
-                SMALL_SHIP_DELAY_BETWEEN_SHOTS
-        );
+        float rand = (float) Math.random();
+        if (rand < SMALL_PROBABILITY) {
+            ship.set(
+                    smallShipRegions,
+                    bulletTextureRegion,
+                    spawnLocation,  // unnecessary
+                    vSmall,
+                    SMALL_SHIP_HEIGHT,
+                    SMALL_SHIP_HP,
+                    SMALL_BULLET_HEIGHT,
+                    SMALL_BULLET_VELOCITY,
+                    SMALL_BULLET_DAMAGE,
+                    SMALL_SHIP_DELAY_BETWEEN_SHOTS
+            );
+        } else if (rand < SMALL_PROBABILITY + MEDIUM_PROBABILITY) {
+            ship.set(
+                    mediumShipRegions,
+                    bulletTextureRegion,
+                    spawnLocation,  // unnecessary
+                    vMedium,
+                    MEDIUM_SHIP_HEIGHT,
+                    MEDIUM_SHIP_HP,
+                    MEDIUM_BULLET_HEIGHT,
+                    MEDIUM_BULLET_VELOCITY,
+                    MEDIUM_BULLET_DAMAGE,
+                    MEDIUM_SHIP_DELAY_BETWEEN_SHOTS
+            );
+        } else {
+            ship.set(
+                    bigShipRegions,
+                    bulletTextureRegion,
+                    spawnLocation,  // unnecessary
+                    vBig,
+                    BIG_SHIP_HEIGHT,
+                    BIG_SHIP_HP,
+                    BIG_BULLET_HEIGHT,
+                    BIG_BULLET_VELOCITY,
+                    BIG_BULLET_DAMAGE,
+                    BIG_SHIP_DELAY_BETWEEN_SHOTS
+            );
+        }
         ship.pos.set(
                 Rnd.nextFloat(worldBounds.getRight() - ship.getHalfWidth(), worldBounds.getLeft() + ship.getHalfWidth()),
                 worldBounds.getTop() + ship.getHalfHeight()
