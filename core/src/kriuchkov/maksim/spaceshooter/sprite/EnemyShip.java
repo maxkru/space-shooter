@@ -14,6 +14,7 @@ import ru.geekbrains.utils.Regions;
 public class EnemyShip extends Ship {
 
     private Vector2 vThroughScreen;
+    private boolean movingIn;
 
     public EnemyShip(BulletPool bulletPool, ExplosionPool explosionPool, Sound bulletFireSound, Rect worldBounds) {
         this.bulletPool = bulletPool;
@@ -27,8 +28,6 @@ public class EnemyShip extends Ship {
         this.bulletFireSoundVolume = 0.1f;
 
         this.vThroughScreen = new Vector2();
-
-        this.isShooting = false;
     }
 
     public void set(
@@ -61,9 +60,11 @@ public class EnemyShip extends Ship {
     public void update(float delta) {
         super.update(delta);
         this.pos.mulAdd(v, delta);
-        if (worldBounds.getTop() > getTop()) {
+        if (movingIn && worldBounds.getTop() > getTop()) {
+            sinceLastShot = delayBetweenShots;
             v.set(vThroughScreen);
             isShooting = true;
+            movingIn = false;
         }
         if (worldBounds.getBottom() > getTop())
             destroy();
@@ -72,6 +73,11 @@ public class EnemyShip extends Ship {
     @Override
     protected void updateBulletEmitterPos() {
         bulletEmitterPos.set(pos.x, getBottom() + 0.01f);
+    }
+
+    public void movingIn() {
+        this.isShooting = false;
+        this.movingIn = true;
     }
 
     public int getHp() {

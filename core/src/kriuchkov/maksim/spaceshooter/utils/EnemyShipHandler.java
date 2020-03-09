@@ -151,6 +151,7 @@ public class EnemyShipHandler {
                 Rnd.nextFloat(worldBounds.getRight() - ship.getHalfWidth(), worldBounds.getLeft() + ship.getHalfWidth()),
                 worldBounds.getTop() + ship.getHalfHeight()
         );
+        ship.movingIn();
     }
 
     public void update(float delta) {
