@@ -2,6 +2,7 @@ package kriuchkov.maksim.spaceshooter.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -33,6 +34,7 @@ public class GameScreen extends BaseScreen {
     private ExplosionPool explosionPool;
     private EnemyShipHandler enemyShipHandler;
 
+    private Sound explosionSound;
     private Music gameMusic;
 
     private static final int STAR_COUNT = 32;
@@ -44,7 +46,9 @@ public class GameScreen extends BaseScreen {
         atlas = new TextureAtlas("textures/texture_atlas.atlas");
         atlasMain = new TextureAtlas("textures/mainAtlas.tpack");
         bulletPool = new BulletPool(20);
-        explosionPool = new ExplosionPool(atlasMain);
+        explosionSound = Gdx.audio.newSound(Gdx.files.internal("sounds/explosion.wav"));
+        explosionPool = new ExplosionPool(atlasMain, explosionSound);
+
         enemyShipHandler = new EnemyShipHandler(atlasMain, bulletPool, explosionPool);
         playerShip = new PlayerShip(atlasMain, bulletPool, explosionPool);
         bg = new Texture("background_simple.png");
@@ -54,6 +58,8 @@ public class GameScreen extends BaseScreen {
         for(int i = 0; i < STAR_COUNT; i++) {
             stars[i] = new Star(atlas);
         }
+
+
 
         gameMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/music.mp3"));
         gameMusic.setLooping(true);
