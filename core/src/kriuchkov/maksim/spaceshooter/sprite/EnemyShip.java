@@ -7,13 +7,15 @@ import com.badlogic.gdx.math.Vector2;
 import kriuchkov.maksim.spaceshooter.base.Ship;
 import kriuchkov.maksim.spaceshooter.base.Sprite;
 import kriuchkov.maksim.spaceshooter.pool.BulletPool;
+import kriuchkov.maksim.spaceshooter.pool.ExplosionPool;
 import ru.geekbrains.math.Rect;
 import ru.geekbrains.utils.Regions;
 
 public class EnemyShip extends Ship {
 
-    public EnemyShip(BulletPool bulletPool, Sound bulletFireSound, Rect worldBounds) {
+    public EnemyShip(BulletPool bulletPool, ExplosionPool explosionPool, Sound bulletFireSound, Rect worldBounds) {
         this.bulletPool = bulletPool;
+        this.explosionPool = explosionPool;
         this.bulletFireSound = bulletFireSound;
         this.worldBounds = worldBounds;
 

@@ -5,7 +5,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import kriuchkov.maksim.spaceshooter.pool.BulletPool;
+import kriuchkov.maksim.spaceshooter.pool.ExplosionPool;
 import kriuchkov.maksim.spaceshooter.sprite.Bullet;
+import kriuchkov.maksim.spaceshooter.sprite.Explosion;
 import ru.geekbrains.math.Rect;
 
 public abstract class Ship extends Sprite {
@@ -15,6 +17,7 @@ public abstract class Ship extends Sprite {
     protected Rect worldBounds;
 
     protected BulletPool bulletPool;
+    protected ExplosionPool explosionPool;
     protected TextureRegion bulletTextureRegion;
     protected Sound bulletFireSound;
     protected Vector2 bulletV;
@@ -54,9 +57,23 @@ public abstract class Ship extends Sprite {
         bulletFireSound.play(bulletFireSoundVolume);
     }
 
+    protected abstract void updateBulletEmitterPos();
+
+    protected void explode() {
+        Explosion explosion = explosionPool.obtain();
+        explosion.set(getHeight(), pos);
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        explode();
+    }
+
     public void dispose() {
         bulletFireSound.dispose();
     }
 
-    protected abstract void updateBulletEmitterPos();
+
+
 }

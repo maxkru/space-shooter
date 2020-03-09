@@ -10,11 +10,13 @@ import ru.geekbrains.math.Rect;
 public class EnemyShipPool extends SpritePool<EnemyShip> {
 
     private BulletPool bulletPool;
+    private ExplosionPool explosionPool;
     private Sound bulletFireSound;
     private Rect worldBounds;
 
-    public EnemyShipPool(BulletPool bulletPool, Sound bulletFireSound) {
+    public EnemyShipPool(BulletPool bulletPool, ExplosionPool explosionPool, Sound bulletFireSound) {
         this.bulletPool = bulletPool;
+        this.explosionPool = explosionPool;
         this.bulletFireSound = bulletFireSound;
     }
 
@@ -24,7 +26,7 @@ public class EnemyShipPool extends SpritePool<EnemyShip> {
 
     @Override
     protected EnemyShip createNewObject() {
-        return new EnemyShip(bulletPool, bulletFireSound, worldBounds);
+        return new EnemyShip(bulletPool, explosionPool, bulletFireSound, worldBounds);
     }
 
 }

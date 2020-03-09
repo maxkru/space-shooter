@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 
 import kriuchkov.maksim.spaceshooter.base.BaseScreen;
 import kriuchkov.maksim.spaceshooter.pool.BulletPool;
+import kriuchkov.maksim.spaceshooter.pool.ExplosionPool;
 import kriuchkov.maksim.spaceshooter.utils.EnemyShipHandler;
 import kriuchkov.maksim.spaceshooter.sprite.Background;
 import kriuchkov.maksim.spaceshooter.sprite.PlayerShip;
@@ -29,6 +30,7 @@ public class GameScreen extends BaseScreen {
     private Star[] stars;
 
     private BulletPool bulletPool;
+    private ExplosionPool explosionPool;
     private EnemyShipHandler enemyShipHandler;
 
     private Music gameMusic;
@@ -42,8 +44,9 @@ public class GameScreen extends BaseScreen {
         atlas = new TextureAtlas("textures/texture_atlas.atlas");
         atlasMain = new TextureAtlas("textures/mainAtlas.tpack");
         bulletPool = new BulletPool(20);
-        enemyShipHandler = new EnemyShipHandler(atlasMain, bulletPool);
-        playerShip = new PlayerShip(atlasMain, bulletPool);
+        explosionPool = new ExplosionPool(atlasMain);
+        enemyShipHandler = new EnemyShipHandler(atlasMain, bulletPool, explosionPool);
+        playerShip = new PlayerShip(atlasMain, bulletPool, explosionPool);
         bg = new Texture("background_simple.png");
         background = new Background(bg);
 
@@ -122,6 +125,8 @@ public class GameScreen extends BaseScreen {
         enemyShipHandler.update(delta);
 
         bulletPool.updateAllActive(delta);
+
+        explosionPool.updateAllActive(delta);
     }
 
     private void draw() {
@@ -133,6 +138,7 @@ public class GameScreen extends BaseScreen {
             star.draw(batch);
         bulletPool.drawAllActive(batch);
         enemyShipHandler.drawAllActive(batch);
+        explosionPool.drawAllActive(batch);
         playerShip.draw(batch);
         batch.end();
     }
@@ -140,6 +146,7 @@ public class GameScreen extends BaseScreen {
     private void freeAllDestroyed() {
         bulletPool.freeAllDestroyedActiveObjects();
         enemyShipHandler.freeAllDestroyedActiveObjects();
+        explosionPool.freeAllDestroyedActiveObjects();
     }
 
     @Override

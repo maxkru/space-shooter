@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 
 import kriuchkov.maksim.spaceshooter.base.Ship;
 import kriuchkov.maksim.spaceshooter.pool.BulletPool;
+import kriuchkov.maksim.spaceshooter.pool.ExplosionPool;
 import ru.geekbrains.math.Rect;
 
 public class PlayerShip extends Ship {
@@ -27,7 +28,7 @@ public class PlayerShip extends Ship {
     private static final float BULLET_VELOCITY = 0.4f;
 
 
-    public PlayerShip(TextureAtlas atlas, BulletPool bulletPool) {
+    public PlayerShip(TextureAtlas atlas, BulletPool bulletPool, ExplosionPool explosionPool) {
         super(atlas.findRegion("main_ship"), 1 , 2, 2);
 
         attractor = new Vector2();
@@ -52,6 +53,8 @@ public class PlayerShip extends Ship {
 
         bulletHeight = 0.01f;
         bulletDamage = 1;
+
+        this.explosionPool = explosionPool;
 
         hp = 100;
     }
