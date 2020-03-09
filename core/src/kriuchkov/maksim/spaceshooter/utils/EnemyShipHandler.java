@@ -21,6 +21,7 @@ public class EnemyShipHandler {
 
     private static final float SMALL_SHIP_HEIGHT = 0.1f;
     private static final float SMALL_SHIP_VELOCITY = 0.15f;
+    private static final float SMALL_SHIP_IN_VELOCITY = 0.15f;
     private static final float SMALL_BULLET_HEIGHT = 0.01f;
     private static final float SMALL_BULLET_VELOCITY = 0.3f;
     private static final int SMALL_BULLET_DAMAGE = 1;
@@ -30,6 +31,7 @@ public class EnemyShipHandler {
 
     private static final float MEDIUM_SHIP_HEIGHT = 0.15f;
     private static final float MEDIUM_SHIP_VELOCITY = 0.05f;
+    private static final float MEDIUM_SHIP_IN_VELOCITY = 0.1f;
     private static final float MEDIUM_BULLET_HEIGHT = 0.02f;
     private static final float MEDIUM_BULLET_VELOCITY = 0.25f;
     private static final int MEDIUM_BULLET_DAMAGE = 4;
@@ -39,6 +41,7 @@ public class EnemyShipHandler {
 
     private static final float BIG_SHIP_HEIGHT = 0.2f;
     private static final float BIG_SHIP_VELOCITY = 0.01f;
+    private static final float BIG_SHIP_IN_VELOCITY = 0.03f;
     private static final float BIG_BULLET_HEIGHT = 0.04f;
     private static final float BIG_BULLET_VELOCITY = 0.2f;
     private static final int BIG_BULLET_DAMAGE = 10;
@@ -61,6 +64,10 @@ public class EnemyShipHandler {
 
     private Vector2 spawnLocation;
 
+
+    private Vector2 vInSmall;
+    private Vector2 vInMedium;
+    private Vector2 vInBig;
     private Vector2 vSmall;
     private Vector2 vMedium;
     private Vector2 vBig;
@@ -72,9 +79,16 @@ public class EnemyShipHandler {
         this.smallShipRegions = Regions.split(atlas.findRegion("enemy0"), 1, 2, 2);
         this.mediumShipRegions = Regions.split(atlas.findRegion("enemy1"), 1, 2, 2);
         this.bigShipRegions = Regions.split(atlas.findRegion("enemy2"), 1, 2, 2);
+
+
+        this.vInSmall = new Vector2(0f, -SMALL_SHIP_IN_VELOCITY);
+        this.vInMedium = new Vector2(0f, -MEDIUM_SHIP_IN_VELOCITY);
+        this.vInBig = new Vector2(0f, -BIG_SHIP_IN_VELOCITY);
+
         this.vSmall = new Vector2(0f, -SMALL_SHIP_VELOCITY);
         this.vMedium = new Vector2(0f, -MEDIUM_SHIP_VELOCITY);
         this.vBig = new Vector2(0f, -BIG_SHIP_VELOCITY);
+
         this.spawnLocation = new Vector2();
         this.bulletTextureRegion = atlas.findRegion("bulletEnemy");
 
@@ -95,6 +109,7 @@ public class EnemyShipHandler {
                     smallShipRegions,
                     bulletTextureRegion,
                     spawnLocation,  // unnecessary
+                    vInSmall,
                     vSmall,
                     SMALL_SHIP_HEIGHT,
                     SMALL_SHIP_HP,
@@ -108,6 +123,7 @@ public class EnemyShipHandler {
                     mediumShipRegions,
                     bulletTextureRegion,
                     spawnLocation,  // unnecessary
+                    vInMedium,
                     vMedium,
                     MEDIUM_SHIP_HEIGHT,
                     MEDIUM_SHIP_HP,
@@ -121,6 +137,7 @@ public class EnemyShipHandler {
                     bigShipRegions,
                     bulletTextureRegion,
                     spawnLocation,  // unnecessary
+                    vInBig,
                     vBig,
                     BIG_SHIP_HEIGHT,
                     BIG_SHIP_HP,

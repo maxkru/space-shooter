@@ -13,6 +13,8 @@ import ru.geekbrains.utils.Regions;
 
 public class EnemyShip extends Ship {
 
+    private Vector2 vThroughScreen;
+
     public EnemyShip(BulletPool bulletPool, ExplosionPool explosionPool, Sound bulletFireSound, Rect worldBounds) {
         this.bulletPool = bulletPool;
         this.explosionPool = explosionPool;
@@ -23,13 +25,18 @@ public class EnemyShip extends Ship {
         this.bulletEmitterPos = new Vector2();
 
         this.bulletFireSoundVolume = 0.1f;
+
+        this.vThroughScreen = new Vector2();
+
+        this.isShooting = false;
     }
 
     public void set(
             TextureRegion[] regions,
             TextureRegion bulletTextureRegion,
             Vector2 pos,
-            Vector2 v0,
+            Vector2 vIn,
+            Vector2 vThroughScreen,
             float heightProportion,
             int hp,
             float bulletHeight,
@@ -40,21 +47,24 @@ public class EnemyShip extends Ship {
         this.regions = regions;
         this.bulletTextureRegion = bulletTextureRegion;
         this.pos.set(pos);
-        this.v0.set(v0);
+        this.v.set(vIn);
+        this.vThroughScreen.set(vThroughScreen);
         setHeightProportion(heightProportion);
         this.hp = hp;
         this.bulletHeight = bulletHeight;
         this.bulletV.set(0f, -bulletVelocity);
         this.bulletDamage = bulletDamage;
         this.delayBetweenShots = delayBetweenShots;
-
-        v.set(v0); // TODO
     }
 
     @Override
     public void update(float delta) {
         super.update(delta);
         this.pos.mulAdd(v, delta);
+        if (worldBounds.getTop() > getTop()) {
+            v.set(vThroughScreen);
+            isShooting = true;
+        }
         if (worldBounds.getBottom() > getTop())
             destroy();
     }
