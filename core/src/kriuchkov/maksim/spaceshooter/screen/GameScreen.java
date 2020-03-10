@@ -159,7 +159,12 @@ public class GameScreen extends BaseScreen {
     }
 
     public void checkCollisions() {
-        enemyShipHandler.checkCollisions(playerShip);
+        for (EnemyShip enemyShip : enemyShipHandler.getActiveEnemyShips()) {
+            float minDist = enemyShip.getHalfHeight() + playerShip.getHalfHeight();
+            if (enemyShip.pos.dst2(playerShip.pos) < minDist * minDist) {
+                enemyShip.destroy();
+            }
+        }
     }
 
     @Override

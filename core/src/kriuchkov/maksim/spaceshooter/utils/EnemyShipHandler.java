@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
+import java.util.List;
+
 import kriuchkov.maksim.spaceshooter.pool.BulletPool;
 import kriuchkov.maksim.spaceshooter.pool.EnemyShipPool;
 import kriuchkov.maksim.spaceshooter.pool.ExplosionPool;
@@ -176,13 +178,7 @@ public class EnemyShipHandler {
         enemyShipPool.freeAllDestroyedActiveObjects();
     }
 
-
-    public void checkCollisions(PlayerShip playerShip) {
-        for (EnemyShip enemyShip : enemyShipPool.getActiveObjects()) {
-            float minDist = enemyShip.getHalfHeight() + playerShip.getHalfHeight();
-            if (enemyShip.pos.dst2(playerShip.pos) < minDist * minDist) {
-                enemyShip.destroy();
-            }
-        }
+    public List<EnemyShip> getActiveEnemyShips() {
+        return enemyShipPool.getActiveObjects();
     }
 }
