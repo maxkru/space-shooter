@@ -34,7 +34,7 @@ public abstract class SpritePool<T extends Sprite> {
         else
             object = freeObjects.remove(freeObjects.size() - 1);
         activeObjects.add(object);
-        System.out.printf("%s: active/free %d/%d\n", getClass().getName(), activeObjects.size(), freeObjects.size());
+        System.out.printf("%s: active/free %d/%d\n", getClass().getSimpleName(), activeObjects.size(), freeObjects.size());
         return object;
     }
 
@@ -75,5 +75,9 @@ public abstract class SpritePool<T extends Sprite> {
 
     public int getActiveCount() {
         return activeObjects.size();
+    }
+
+    public List<T> getActiveObjects() {
+        return activeObjects;
     }
 }

@@ -2,6 +2,7 @@ package kriuchkov.maksim.spaceshooter.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -9,8 +10,9 @@ import com.badlogic.gdx.math.Vector2;
 
 import kriuchkov.maksim.spaceshooter.base.BaseScreen;
 import kriuchkov.maksim.spaceshooter.pool.BulletPool;
-import kriuchkov.maksim.spaceshooter.pool.EnemyShipHandler;
-import kriuchkov.maksim.spaceshooter.pool.EnemyShipPool;
+import kriuchkov.maksim.spaceshooter.pool.ExplosionPool;
+import kriuchkov.maksim.spaceshooter.sprite.EnemyShip;
+import kriuchkov.maksim.spaceshooter.utils.EnemyShipHandler;
 import kriuchkov.maksim.spaceshooter.sprite.Background;
 import kriuchkov.maksim.spaceshooter.sprite.PlayerShip;
 import kriuchkov.maksim.spaceshooter.sprite.Star;
@@ -30,8 +32,10 @@ public class GameScreen extends BaseScreen {
     private Star[] stars;
 
     private BulletPool bulletPool;
+    private ExplosionPool explosionPool;
     private EnemyShipHandler enemyShipHandler;
 
+    private Sound explosionSound;
     private Music gameMusic;
 
     private static final int STAR_COUNT = 32;
@@ -43,8 +47,11 @@ public class GameScreen extends BaseScreen {
         atlas = new TextureAtlas("textures/texture_atlas.atlas");
         atlasMain = new TextureAtlas("textures/mainAtlas.tpack");
         bulletPool = new BulletPool(20);
-        enemyShipHandler = new EnemyShipHandler(atlasMain);
-        playerShip = new PlayerShip(atlasMain, bulletPool);
+        explosionSound = Gdx.audio.newSound(Gdx.files.internal("sounds/explosion.wav"));
+        explosionPool = new ExplosionPool(atlasMain, explosionSound);
+
+        enemyShipHandler = new EnemyShipHandler(atlasMain, bulletPool, explosionPool);
+        playerShip = new PlayerShip(atlasMain, bulletPool, explosionPool);
         bg = new Texture("background_simple.png");
         background = new Background(bg);
 
@@ -52,6 +59,8 @@ public class GameScreen extends BaseScreen {
         for(int i = 0; i < STAR_COUNT; i++) {
             stars[i] = new Star(atlas);
         }
+
+
 
         gameMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/music.mp3"));
         gameMusic.setLooping(true);
@@ -122,7 +131,11 @@ public class GameScreen extends BaseScreen {
 
         enemyShipHandler.update(delta);
 
+        checkCollisions();
+
         bulletPool.updateAllActive(delta);
+
+        explosionPool.updateAllActive(delta);
     }
 
     private void draw() {
@@ -134,6 +147,7 @@ public class GameScreen extends BaseScreen {
             star.draw(batch);
         bulletPool.drawAllActive(batch);
         enemyShipHandler.drawAllActive(batch);
+        explosionPool.drawAllActive(batch);
         playerShip.draw(batch);
         batch.end();
     }
@@ -141,5 +155,20 @@ public class GameScreen extends BaseScreen {
     private void freeAllDestroyed() {
         bulletPool.freeAllDestroyedActiveObjects();
         enemyShipHandler.freeAllDestroyedActiveObjects();
+        explosionPool.freeAllDestroyedActiveObjects();
+    }
+
+    public void checkCollisions() {
+        enemyShipHandler.checkCollisions(playerShip);
+    }
+
+    @Override
+    public void pause() {
+        gameMusic.pause();
+    }
+
+    @Override
+    public void resume() {
+        gameMusic.play();
     }
 }
