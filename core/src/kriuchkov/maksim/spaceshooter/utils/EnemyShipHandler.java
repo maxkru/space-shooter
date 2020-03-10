@@ -181,4 +181,10 @@ public class EnemyShipHandler {
     public List<EnemyShip> getActiveEnemyShips() {
         return enemyShipPool.getActiveObjects();
     }
+
+    public void reset() {
+        for (EnemyShip enemyShip : enemyShipPool.getActiveObjects()) {
+            enemyShip.destroy(false);
+        }
+    }
 }

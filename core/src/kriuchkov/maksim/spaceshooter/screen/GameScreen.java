@@ -13,6 +13,7 @@ import kriuchkov.maksim.spaceshooter.base.BaseScreen;
 import kriuchkov.maksim.spaceshooter.pool.BulletPool;
 import kriuchkov.maksim.spaceshooter.pool.ExplosionPool;
 import kriuchkov.maksim.spaceshooter.sprite.Bullet;
+import kriuchkov.maksim.spaceshooter.sprite.ButtonNewGame;
 import kriuchkov.maksim.spaceshooter.sprite.EnemyShip;
 import kriuchkov.maksim.spaceshooter.sprite.MessageGameOver;
 import kriuchkov.maksim.spaceshooter.utils.EnemyShipHandler;
@@ -41,6 +42,7 @@ public class GameScreen extends BaseScreen {
     private Star[] stars;
 
     private MessageGameOver messageGameOver;
+    private ButtonNewGame buttonNewGame;
 
     private BulletPool bulletPool;
     private ExplosionPool explosionPool;
@@ -79,6 +81,7 @@ public class GameScreen extends BaseScreen {
         gameMusic.play();
 
         messageGameOver = new MessageGameOver(atlasMain);
+        buttonNewGame = new ButtonNewGame(atlasMain, this);
     }
 
     @Override
@@ -89,6 +92,8 @@ public class GameScreen extends BaseScreen {
             else
                 pause();
         }
+        if (keycode == Input.Keys.R && gameState == GameState.GAME_OVER)
+            reset();
         return gameState == GameState.PLAYING && playerShip.keyDown(keycode);
     }
 
@@ -100,6 +105,8 @@ public class GameScreen extends BaseScreen {
     @Override
     public boolean touchDown(Vector2 touch, int pointer, int button) {
         super.touchDown(touch, pointer, button);
+        if (gameState == GameState.GAME_OVER && buttonNewGame.isMe(touch))
+            reset();
         return gameState == GameState.PLAYING && playerShip.touchDown(touch, pointer, button);
     }
 
@@ -131,6 +138,7 @@ public class GameScreen extends BaseScreen {
         for(Star star : stars)
             star.resize(worldBounds);
         messageGameOver.resize(worldBounds);
+        buttonNewGame.resize(worldBounds);
     }
 
     @Override
@@ -169,8 +177,10 @@ public class GameScreen extends BaseScreen {
             playerShip.draw(batch);
         }
         explosionPool.drawAllActive(batch);
-        if (gameState == GameState.GAME_OVER)
+        if (gameState == GameState.GAME_OVER) {
             messageGameOver.draw(batch);
+            buttonNewGame.draw(batch);
+        }
         batch.end();
     }
 
@@ -222,5 +232,15 @@ public class GameScreen extends BaseScreen {
     public void resume() {
         gameMusic.play();
         gameState = prePauseGameState;
+    }
+
+    public void reset() {
+        for (Bullet bullet : bulletPool.getActiveObjects()) {
+            bullet.destroy();
+        }
+        enemyShipHandler.reset();
+        playerShip.reset();
+        gameState = GameState.PLAYING;
+        gameMusic.play();
     }
 }

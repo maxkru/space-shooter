@@ -2,9 +2,7 @@ package kriuchkov.maksim.spaceshooter.sprite;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import kriuchkov.maksim.spaceshooter.base.Ship;
@@ -30,6 +28,11 @@ public class PlayerShip extends Ship {
     private static final float SHIP_VELOCITY = 0.25f;
     private static final float BULLET_VELOCITY = 0.4f;
 
+    private static final int PLAYER_SHIP_MAX_HP = 1;
+
+    private static final float INITIAL_POS_X = 0f;
+    private static final float INITIAL_POS_Y = -0.25f;
+
 
     public PlayerShip(TextureAtlas atlas, BulletPool bulletPool, ExplosionPool explosionPool) {
         super(atlas.findRegion("main_ship"), 1 , 2, 2);
@@ -37,12 +40,7 @@ public class PlayerShip extends Ship {
         attractor = new Vector2();
         keyMovementDirection = new Vector2();
 
-        pos.set(0, -0.25f);
-
-        movingByTouch = false;
-        movingByKeyboard = false;
-        manualShooting = false;
-        autoShooting = false;
+        reset();
 
         this.bulletPool = bulletPool;
         bulletTextureRegion = atlas.findRegion("bulletMainShip");
@@ -60,8 +58,6 @@ public class PlayerShip extends Ship {
         bulletDamage = 1;
 
         this.explosionPool = explosionPool;
-
-        hp = 100;
     }
 
     @Override
@@ -183,4 +179,16 @@ public class PlayerShip extends Ship {
         return bullet.getRight() > getLeft() && bullet.getLeft() < getRight() && bullet.getBottom() < this.pos.y && bullet.getTop() > getBottom();
     }
 
+    public void reset() {
+        hp = PLAYER_SHIP_MAX_HP;
+        pos.set(INITIAL_POS_X, INITIAL_POS_Y);
+
+        movingByTouch = false;
+        movingByKeyboard = false;
+        manualShooting = false;
+        autoShooting = false;
+        isShooting = false;
+
+        flushDestroyed();
+    }
 }
