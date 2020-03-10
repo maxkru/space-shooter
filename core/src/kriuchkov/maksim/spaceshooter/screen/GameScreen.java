@@ -13,6 +13,7 @@ import kriuchkov.maksim.spaceshooter.pool.BulletPool;
 import kriuchkov.maksim.spaceshooter.pool.ExplosionPool;
 import kriuchkov.maksim.spaceshooter.sprite.Bullet;
 import kriuchkov.maksim.spaceshooter.sprite.EnemyShip;
+import kriuchkov.maksim.spaceshooter.sprite.MessageGameOver;
 import kriuchkov.maksim.spaceshooter.utils.EnemyShipHandler;
 import kriuchkov.maksim.spaceshooter.sprite.Background;
 import kriuchkov.maksim.spaceshooter.sprite.PlayerShip;
@@ -36,6 +37,8 @@ public class GameScreen extends BaseScreen {
     private PlayerShip playerShip;
 
     private Star[] stars;
+
+    private MessageGameOver messageGameOver;
 
     private BulletPool bulletPool;
     private ExplosionPool explosionPool;
@@ -71,6 +74,8 @@ public class GameScreen extends BaseScreen {
         gameMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/music.mp3"));
         gameMusic.setLooping(true);
         gameMusic.play();
+
+        messageGameOver = new MessageGameOver(atlasMain);
     }
 
     @Override
@@ -116,6 +121,7 @@ public class GameScreen extends BaseScreen {
         enemyShipHandler.setWorldBounds(worldBounds);
         for(Star star : stars)
             star.resize(worldBounds);
+        messageGameOver.resize(worldBounds);
     }
 
     @Override
@@ -153,6 +159,8 @@ public class GameScreen extends BaseScreen {
         explosionPool.drawAllActive(batch);
         if (gameState == GameState.PLAYING)
             playerShip.draw(batch);
+        if (gameState == GameState.GAME_OVER)
+            messageGameOver.draw(batch);
         batch.end();
     }
 
