@@ -179,7 +179,8 @@ public class EnemyShipHandler {
 
     public void checkCollisions(PlayerShip playerShip) {
         for (EnemyShip enemyShip : enemyShipPool.getActiveObjects()) {
-            if (!enemyShip.isOutside(playerShip)) {
+            float minDist = enemyShip.getHalfHeight() + playerShip.getHalfHeight();
+            if (enemyShip.pos.dst2(playerShip.pos) < minDist * minDist) {
                 enemyShip.destroy();
             }
         }
