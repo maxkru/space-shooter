@@ -28,7 +28,7 @@ public class PlayerShip extends Ship {
     private static final float SHIP_VELOCITY = 0.25f;
     private static final float BULLET_VELOCITY = 0.4f;
 
-    private static final int PLAYER_SHIP_MAX_HP = 1;
+    private static final int PLAYER_SHIP_MAX_HP = 100;
 
     private static final float INITIAL_POS_X = 0f;
     private static final float INITIAL_POS_Y = -0.25f;
