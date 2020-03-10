@@ -24,6 +24,9 @@ public class PlayerShip extends Ship {
     private boolean movingRight;
     private Vector2 keyMovementDirection;
 
+    private boolean manualShooting;
+    private boolean autoShooting;
+
     private static final float SHIP_VELOCITY = 0.25f;
     private static final float BULLET_VELOCITY = 0.4f;
 
@@ -38,6 +41,8 @@ public class PlayerShip extends Ship {
 
         movingByTouch = false;
         movingByKeyboard = false;
+        manualShooting = false;
+        autoShooting = false;
 
         this.bulletPool = bulletPool;
         bulletTextureRegion = atlas.findRegion("bulletMainShip");
@@ -141,9 +146,12 @@ public class PlayerShip extends Ship {
                 movingLeft = true;
                 break;
             case Input.Keys.SPACE:
-                isShooting = true;
+                manualShooting = true;
+                break;
+            case Input.Keys.V:
+                autoShooting = !autoShooting;
         }
-
+        isShooting = manualShooting || autoShooting;
         return true;
     }
 
@@ -162,10 +170,11 @@ public class PlayerShip extends Ship {
                 movingLeft = false;
                 break;
             case Input.Keys.SPACE:
-                isShooting = false;
+                manualShooting = false;
         }
         if (!movingRight && !movingLeft && !movingUp && !movingDown)
             movingByKeyboard = false;
+        isShooting = manualShooting || autoShooting;
 
         return true;
     }
