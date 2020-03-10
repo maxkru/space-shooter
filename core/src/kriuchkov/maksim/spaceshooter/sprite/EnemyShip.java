@@ -85,6 +85,6 @@ public class EnemyShip extends Ship {
     }
 
     public boolean collidesWith(Bullet bullet) {
-        return bullet.getRight() > getLeft() && bullet.getLeft() < getRight() && bullet.getTop() > this.pos.y;
+        return bullet.getRight() > getLeft() && bullet.getLeft() < getRight() && bullet.getTop() > this.pos.y && bullet.getBottom() < getTop();
     }
 }
