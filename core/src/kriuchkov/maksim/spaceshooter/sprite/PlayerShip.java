@@ -189,6 +189,8 @@ public class PlayerShip extends Ship {
         autoShooting = false;
         isShooting = false;
 
+        movingDown = movingUp = movingRight = movingLeft = false;
+
         flushDestroyed();
     }
 }
