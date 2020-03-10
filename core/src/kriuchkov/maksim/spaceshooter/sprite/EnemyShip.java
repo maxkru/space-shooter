@@ -15,6 +15,7 @@ public class EnemyShip extends Ship {
 
     private Vector2 vThroughScreen;
     private boolean movingIn;
+    private int collisionDamage;
 
     public EnemyShip(BulletPool bulletPool, ExplosionPool explosionPool, Sound bulletFireSound, Rect worldBounds) {
         this.bulletPool = bulletPool;
@@ -41,7 +42,8 @@ public class EnemyShip extends Ship {
             float bulletHeight,
             float bulletVelocity,
             int bulletDamage,
-            float delayBetweenShots
+            float delayBetweenShots,
+            int collisionDamage
     ) {
         this.regions = regions;
         this.bulletTextureRegion = bulletTextureRegion;
@@ -54,6 +56,7 @@ public class EnemyShip extends Ship {
         this.bulletV.set(0f, -bulletVelocity);
         this.bulletDamage = bulletDamage;
         this.delayBetweenShots = delayBetweenShots;
+        this.collisionDamage = collisionDamage;
     }
 
     @Override
@@ -86,5 +89,9 @@ public class EnemyShip extends Ship {
 
     public boolean collidesWith(Bullet bullet) {
         return bullet.getRight() > getLeft() && bullet.getLeft() < getRight() && bullet.getTop() > this.pos.y && bullet.getBottom() < getTop();
+    }
+
+    public int getCollisionDamage() {
+        return collisionDamage;
     }
 }

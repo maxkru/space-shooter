@@ -195,7 +195,7 @@ public class GameScreen extends BaseScreen {
             float minDist = enemyShip.getHalfHeight() + playerShip.getHalfHeight();
             if (enemyShip.pos.dst2(playerShip.pos) < minDist * minDist) {
                 enemyShip.destroy();
-                // TODO: damage player ship, with amount specific for each ship type
+                playerShip.damage(enemyShip.getCollisionDamage());
             }
         }
 

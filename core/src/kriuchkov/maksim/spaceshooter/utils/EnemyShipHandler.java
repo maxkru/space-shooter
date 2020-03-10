@@ -29,6 +29,7 @@ public class EnemyShipHandler {
     private static final int SMALL_BULLET_DAMAGE = 1;
     private static final float SMALL_SHIP_DELAY_BETWEEN_SHOTS = 2f;
     private static final int SMALL_SHIP_HP = 5;
+    private static final int SMALL_SHIP_COLLISION_DAMAGE = 10;
     private static final float SMALL_PROBABILITY = 0.5f;
 
     private static final float MEDIUM_SHIP_HEIGHT = 0.15f;
@@ -39,6 +40,7 @@ public class EnemyShipHandler {
     private static final int MEDIUM_BULLET_DAMAGE = 4;
     private static final float MEDIUM_SHIP_DELAY_BETWEEN_SHOTS = 2.5f;
     private static final int MEDIUM_SHIP_HP = 40;
+    private static final int MEDIUM_SHIP_COLLISION_DAMAGE = 30;
     private static final float MEDIUM_PROBABILITY = 0.3f;
 
     private static final float BIG_SHIP_HEIGHT = 0.2f;
@@ -49,6 +51,7 @@ public class EnemyShipHandler {
     private static final int BIG_BULLET_DAMAGE = 10;
     private static final float BIG_SHIP_DELAY_BETWEEN_SHOTS = 3f;
     private static final int BIG_SHIP_HP = 100;
+    private static final int BIG_SHIP_COLLISION_DAMAGE = 75;
     private static final float BIG_PROBABILITY = 0.2f;
 
     private EnemyShipPool enemyShipPool;
@@ -118,7 +121,8 @@ public class EnemyShipHandler {
                     SMALL_BULLET_HEIGHT,
                     SMALL_BULLET_VELOCITY,
                     SMALL_BULLET_DAMAGE,
-                    SMALL_SHIP_DELAY_BETWEEN_SHOTS
+                    SMALL_SHIP_DELAY_BETWEEN_SHOTS,
+                    SMALL_SHIP_COLLISION_DAMAGE
             );
         } else if (rand < SMALL_PROBABILITY + MEDIUM_PROBABILITY) {
             ship.set(
@@ -132,7 +136,8 @@ public class EnemyShipHandler {
                     MEDIUM_BULLET_HEIGHT,
                     MEDIUM_BULLET_VELOCITY,
                     MEDIUM_BULLET_DAMAGE,
-                    MEDIUM_SHIP_DELAY_BETWEEN_SHOTS
+                    MEDIUM_SHIP_DELAY_BETWEEN_SHOTS,
+                    MEDIUM_SHIP_COLLISION_DAMAGE
             );
         } else {
             ship.set(
@@ -146,7 +151,8 @@ public class EnemyShipHandler {
                     BIG_BULLET_HEIGHT,
                     BIG_BULLET_VELOCITY,
                     BIG_BULLET_DAMAGE,
-                    BIG_SHIP_DELAY_BETWEEN_SHOTS
+                    BIG_SHIP_DELAY_BETWEEN_SHOTS,
+                    BIG_SHIP_COLLISION_DAMAGE
             );
         }
         ship.pos.set(
