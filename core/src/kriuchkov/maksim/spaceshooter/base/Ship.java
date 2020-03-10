@@ -49,6 +49,8 @@ public abstract class Ship extends Sprite {
         if (isShooting && sinceLastShot >= delayBetweenShots) {
             shoot();
             sinceLastShot -= delayBetweenShots;
+            if (sinceLastShot >= delayBetweenShots)
+                sinceLastShot = 0;
         }
 
         damageAnimationTimer += delta;
