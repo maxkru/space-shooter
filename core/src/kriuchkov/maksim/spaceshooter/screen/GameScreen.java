@@ -1,6 +1,7 @@
 package kriuchkov.maksim.spaceshooter.screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
@@ -27,6 +28,7 @@ public class GameScreen extends BaseScreen {
     }
 
     private GameState gameState;
+    private GameState prePauseGameState;
 
     private TextureAtlas atlas;
     private TextureAtlas atlasMain;
@@ -70,6 +72,7 @@ public class GameScreen extends BaseScreen {
         }
 
         gameState = GameState.PLAYING;
+        prePauseGameState = GameState.PLAYING;
 
         gameMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/music.mp3"));
         gameMusic.setLooping(true);
@@ -80,6 +83,12 @@ public class GameScreen extends BaseScreen {
 
     @Override
     public boolean keyDown(int keycode) {
+        if (keycode == Input.Keys.P) {
+            if (gameState == GameState.PAUSED)
+                resume();
+            else
+                pause();
+        }
         return gameState == GameState.PLAYING && playerShip.keyDown(keycode);
     }
 
@@ -138,13 +147,13 @@ public class GameScreen extends BaseScreen {
     private void update(float delta) {
         for(Star star : stars)
             star.update(delta);
-        enemyShipHandler.update(delta, gameState == GameState.PLAYING);
-        bulletPool.updateAllActive(delta);
+        explosionPool.updateAllActive(delta);
         if (gameState == GameState.PLAYING) {
+            enemyShipHandler.update(delta, true);
+            bulletPool.updateAllActive(delta);
             playerShip.update(delta);
             checkCollisions();
         }
-        explosionPool.updateAllActive(delta);
     }
 
     private void draw() {
@@ -154,11 +163,12 @@ public class GameScreen extends BaseScreen {
         background.draw(batch);
         for(Star star : stars)
             star.draw(batch);
-        bulletPool.drawAllActive(batch);
-        enemyShipHandler.drawAllActive(batch);
-        explosionPool.drawAllActive(batch);
-        if (gameState == GameState.PLAYING)
+        if (gameState == GameState.PLAYING) {
+            bulletPool.drawAllActive(batch);
+            enemyShipHandler.drawAllActive(batch);
             playerShip.draw(batch);
+        }
+        explosionPool.drawAllActive(batch);
         if (gameState == GameState.GAME_OVER)
             messageGameOver.draw(batch);
         batch.end();
@@ -204,10 +214,13 @@ public class GameScreen extends BaseScreen {
     @Override
     public void pause() {
         gameMusic.pause();
+        prePauseGameState = gameState;
+        gameState = GameState.PAUSED;
     }
 
     @Override
     public void resume() {
         gameMusic.play();
+        gameState = prePauseGameState;
     }
 }
