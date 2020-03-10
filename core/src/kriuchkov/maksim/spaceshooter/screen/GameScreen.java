@@ -21,6 +21,11 @@ import ru.geekbrains.math.Rect;
 
 public class GameScreen extends BaseScreen {
 
+    private enum GameState {
+        PLAYING, PAUSED, GAME_OVER
+    }
+
+    private GameState gameState;
 
     private TextureAtlas atlas;
     private TextureAtlas atlasMain;
@@ -61,7 +66,7 @@ public class GameScreen extends BaseScreen {
             stars[i] = new Star(atlas);
         }
 
-
+        gameState = GameState.PLAYING;
 
         gameMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/music.mp3"));
         gameMusic.setLooping(true);
@@ -70,30 +75,30 @@ public class GameScreen extends BaseScreen {
 
     @Override
     public boolean keyDown(int keycode) {
-        return playerShip.keyDown(keycode);
+        return gameState == GameState.PLAYING && playerShip.keyDown(keycode);
     }
 
     @Override
     public boolean keyUp(int keycode) {
-        return playerShip.keyUp(keycode);
+        return gameState == GameState.PLAYING && playerShip.keyUp(keycode);
     }
 
     @Override
     public boolean touchDown(Vector2 touch, int pointer, int button) {
         super.touchDown(touch, pointer, button);
-        return playerShip.touchDown(touch, pointer, button);
+        return gameState == GameState.PLAYING && playerShip.touchDown(touch, pointer, button);
     }
 
     @Override
     public boolean touchDragged(Vector2 touch, int pointer) {
         super.touchDragged(touch, pointer);
-        return playerShip.touchDragged(touch, pointer);
+        return gameState == GameState.PLAYING && playerShip.touchDragged(touch, pointer);
     }
 
     @Override
     public boolean touchUp(Vector2 touch, int pointer, int button) {
         super.touchUp(touch, pointer, button);
-        return playerShip.touchUp(touch, pointer, button);
+        return gameState == GameState.PLAYING && playerShip.touchUp(touch, pointer, button);
     }
 
     @Override
@@ -125,17 +130,14 @@ public class GameScreen extends BaseScreen {
     }
 
     private void update(float delta) {
-        playerShip.update(delta);
-
         for(Star star : stars)
             star.update(delta);
-
-        enemyShipHandler.update(delta);
-
-        checkCollisions();
-
+        enemyShipHandler.update(delta, gameState == GameState.PLAYING);
         bulletPool.updateAllActive(delta);
-
+        if (gameState == GameState.PLAYING) {
+            playerShip.update(delta);
+            checkCollisions();
+        }
         explosionPool.updateAllActive(delta);
     }
 
@@ -149,7 +151,8 @@ public class GameScreen extends BaseScreen {
         bulletPool.drawAllActive(batch);
         enemyShipHandler.drawAllActive(batch);
         explosionPool.drawAllActive(batch);
-        playerShip.draw(batch);
+        if (gameState == GameState.PLAYING)
+            playerShip.draw(batch);
         batch.end();
     }
 
@@ -164,6 +167,7 @@ public class GameScreen extends BaseScreen {
             float minDist = enemyShip.getHalfHeight() + playerShip.getHalfHeight();
             if (enemyShip.pos.dst2(playerShip.pos) < minDist * minDist) {
                 enemyShip.destroy();
+                // TODO: damage player ship, with amount specific for each ship type
             }
         }
 
@@ -181,6 +185,11 @@ public class GameScreen extends BaseScreen {
                     bullet.destroy();
                 }
             }
+        }
+
+        if (playerShip.isDestroyed()) {
+            gameState = GameState.GAME_OVER;
+            gameMusic.stop();
         }
     }
 

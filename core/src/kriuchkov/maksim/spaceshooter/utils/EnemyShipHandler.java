@@ -156,9 +156,9 @@ public class EnemyShipHandler {
         ship.movingIn();
     }
 
-    public void update(float delta) {
+    public void update(float delta, boolean spawn) {
         spawnTimer += delta;
-        if (spawnTimer >= spawnInterval) {
+        if (spawn && spawnTimer >= spawnInterval) {
             spawnTimer = 0f;
             spawn();
         }
