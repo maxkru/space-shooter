@@ -12,6 +12,8 @@ import ru.geekbrains.math.Rect;
 
 public abstract class Ship extends Sprite {
 
+    protected static final float DAMAGE_ANIMATION_INTERVAL = 0.1f;
+
     protected final Vector2 v0 = new Vector2();
 
     protected Rect worldBounds;
@@ -28,7 +30,7 @@ public abstract class Ship extends Sprite {
     protected float bulletHeight;
     protected int bulletDamage;
     protected float bulletFireSoundVolume = 1f;
-
+    protected float damageAnimationTimer;
     protected int hp;
 
     protected Ship() {
@@ -47,6 +49,11 @@ public abstract class Ship extends Sprite {
         if (isShooting && sinceLastShot >= delayBetweenShots) {
             shoot();
             sinceLastShot -= delayBetweenShots;
+        }
+
+        damageAnimationTimer += delta;
+        if (damageAnimationTimer >= DAMAGE_ANIMATION_INTERVAL) {
+            frame = 0;
         }
     }
 
@@ -84,6 +91,8 @@ public abstract class Ship extends Sprite {
         if (hp <= 0) {
             destroy();
         }
+        damageAnimationTimer = 0f;
+        frame = 1;
     }
 
 }
