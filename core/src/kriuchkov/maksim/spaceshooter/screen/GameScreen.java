@@ -105,8 +105,8 @@ public class GameScreen extends BaseScreen {
     @Override
     public boolean touchDown(Vector2 touch, int pointer, int button) {
         super.touchDown(touch, pointer, button);
-        if (gameState == GameState.GAME_OVER && buttonNewGame.isMe(touch))
-            reset();
+        if (gameState == GameState.GAME_OVER)
+            buttonNewGame.touchDown(touch, pointer, button);
         return gameState == GameState.PLAYING && playerShip.touchDown(touch, pointer, button);
     }
 
@@ -119,6 +119,8 @@ public class GameScreen extends BaseScreen {
     @Override
     public boolean touchUp(Vector2 touch, int pointer, int button) {
         super.touchUp(touch, pointer, button);
+        if (gameState == GameState.GAME_OVER)
+            buttonNewGame.touchUp(touch, pointer, button);
         return gameState == GameState.PLAYING && playerShip.touchUp(touch, pointer, button);
     }
 

@@ -1,6 +1,5 @@
 package kriuchkov.maksim.spaceshooter.sprite;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
 import kriuchkov.maksim.spaceshooter.base.ScaledButton;
@@ -9,11 +8,13 @@ import ru.geekbrains.math.Rect;
 
 public class ButtonNewGame extends ScaledButton {
 
-    private static final float PADDING = 0.35f;
+    private static final float POS_X = 0f;
+    private static final float POS_Y = -0.15f;
     private GameScreen gameScreen;
 
     public ButtonNewGame(TextureAtlas atlas, GameScreen gameScreen) {
         super(atlas.findRegion("button_new_game"));
+        this.gameScreen = gameScreen;
     }
 
     @Override
@@ -24,6 +25,7 @@ public class ButtonNewGame extends ScaledButton {
     @Override
     public void resize(Rect worldBounds) {
         setHeightProportion(0.06f);
-        setBottom(worldBounds.getBottom() + PADDING);
+        pos.x = POS_X;
+        pos.y = POS_Y;
     }
 }
