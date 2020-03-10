@@ -67,7 +67,7 @@ public class EnemyShip extends Ship {
             movingIn = false;
         }
         if (worldBounds.getBottom() > getTop())
-            destroy();
+            destroy(false);
     }
 
     @Override
@@ -82,5 +82,9 @@ public class EnemyShip extends Ship {
 
     public int getHp() {
         return hp;
+    }
+
+    public boolean collidesWith(Bullet bullet) {
+        return bullet.getRight() > getLeft() && bullet.getLeft() < getRight() && bullet.getTop() > this.pos.y;
     }
 }

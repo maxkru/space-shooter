@@ -66,14 +66,24 @@ public abstract class Ship extends Sprite {
 
     @Override
     public void destroy() {
+        destroy(true);
+    }
+
+    public void destroy(boolean explosion) {
         super.destroy();
-        explode();
+        if (explosion)
+            explode();
     }
 
     public void dispose() {
         bulletFireSound.dispose();
     }
 
-
+    public void damage(int damageAmount) {
+        this.hp -= damageAmount;
+        if (hp <= 0) {
+            destroy();
+        }
+    }
 
 }

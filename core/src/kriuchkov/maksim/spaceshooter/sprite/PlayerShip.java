@@ -170,5 +170,8 @@ public class PlayerShip extends Ship {
         return true;
     }
 
+    public boolean collidesWith(Bullet bullet) {
+        return bullet.getRight() > getLeft() && bullet.getLeft() < getRight() && bullet.getBottom() < this.pos.y && bullet.getTop() > getBottom();
+    }
 
 }

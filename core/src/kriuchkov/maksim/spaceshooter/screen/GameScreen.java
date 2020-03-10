@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Vector2;
 import kriuchkov.maksim.spaceshooter.base.BaseScreen;
 import kriuchkov.maksim.spaceshooter.pool.BulletPool;
 import kriuchkov.maksim.spaceshooter.pool.ExplosionPool;
+import kriuchkov.maksim.spaceshooter.sprite.Bullet;
 import kriuchkov.maksim.spaceshooter.sprite.EnemyShip;
 import kriuchkov.maksim.spaceshooter.utils.EnemyShipHandler;
 import kriuchkov.maksim.spaceshooter.sprite.Background;
@@ -163,6 +164,22 @@ public class GameScreen extends BaseScreen {
             float minDist = enemyShip.getHalfHeight() + playerShip.getHalfHeight();
             if (enemyShip.pos.dst2(playerShip.pos) < minDist * minDist) {
                 enemyShip.destroy();
+            }
+        }
+
+        for (Bullet bullet : bulletPool.getActiveObjects()) {
+            if (bullet.getOwner() == playerShip) {
+                for (EnemyShip enemyShip : enemyShipHandler.getActiveEnemyShips()) {
+                    if (enemyShip.collidesWith(bullet)) {
+                        enemyShip.damage(bullet.getDamage());
+                        bullet.destroy();
+                    }
+                }
+            } else {
+                if (playerShip.collidesWith(bullet)) {
+                    playerShip.damage(bullet.getDamage());
+                    bullet.destroy();
+                }
             }
         }
     }
