@@ -50,6 +50,7 @@ public class EnemyShipHandler {
     private static final float BIG_SHIP_DELAY_BETWEEN_SHOTS = 3f;
     private static final int BIG_SHIP_HP = 100;
     private static final int BIG_SHIP_COLLISION_DAMAGE = 75;
+    private static final float BIG_SHIP_KAMIKAZE_SPAWN_DELAY = 10f;
     private static final float BIG_PROBABILITY = 0.2f;
 
     private EnemyShipPool enemyShipPool;
@@ -96,7 +97,7 @@ public class EnemyShipHandler {
         this.bulletTextureRegion = atlas.findRegion("bulletEnemy");
 
         this.bulletFireSound = Gdx.audio.newSound(Gdx.files.internal("sounds/laser.wav"));
-        this.enemyShipPool = new EnemyShipPool(bulletPool, explosionPool, bulletFireSound);
+        this.enemyShipPool = new EnemyShipPool(bulletPool, explosionPool, this, bulletFireSound);
     }
 
     public void setWorldBounds(Rect worldBounds) {
@@ -120,7 +121,9 @@ public class EnemyShipHandler {
                     SMALL_BULLET_VELOCITY,
                     SMALL_BULLET_DAMAGE,
                     SMALL_SHIP_DELAY_BETWEEN_SHOTS,
-                    SMALL_SHIP_COLLISION_DAMAGE
+                    SMALL_SHIP_COLLISION_DAMAGE,
+                    false,
+                    0f
             );
         } else if (rand < SMALL_PROBABILITY + MEDIUM_PROBABILITY) {
             ship.set(
@@ -135,7 +138,9 @@ public class EnemyShipHandler {
                     MEDIUM_BULLET_VELOCITY,
                     MEDIUM_BULLET_DAMAGE,
                     MEDIUM_SHIP_DELAY_BETWEEN_SHOTS,
-                    MEDIUM_SHIP_COLLISION_DAMAGE
+                    MEDIUM_SHIP_COLLISION_DAMAGE,
+                    false,
+                    0f
             );
         } else {
             ship.set(
@@ -150,7 +155,9 @@ public class EnemyShipHandler {
                     BIG_BULLET_VELOCITY,
                     BIG_BULLET_DAMAGE,
                     BIG_SHIP_DELAY_BETWEEN_SHOTS,
-                    BIG_SHIP_COLLISION_DAMAGE
+                    BIG_SHIP_COLLISION_DAMAGE,
+                    true,
+                    BIG_SHIP_KAMIKAZE_SPAWN_DELAY
             );
         }
         ship.pos.set(
@@ -158,6 +165,27 @@ public class EnemyShipHandler {
                 worldBounds.getTop() + ship.getHalfHeight()
         );
         ship.movingIn();
+    }
+
+    public void spawnKamikaze(Vector2 pos) {
+        EnemyShip enemyShip = enemyShipPool.obtain();
+        enemyShip.set(
+                smallShipRegions,
+                bulletTextureRegion,
+                pos,
+                vInSmall,
+                vSmall,
+                SMALL_SHIP_HEIGHT,
+                SMALL_SHIP_HP,
+                SMALL_BULLET_HEIGHT,
+                SMALL_BULLET_VELOCITY,
+                SMALL_BULLET_DAMAGE,
+                SMALL_SHIP_DELAY_BETWEEN_SHOTS,
+                SMALL_SHIP_COLLISION_DAMAGE,
+                false,
+                0f
+        );
+        enemyShip.movingIn();
     }
 
     public void update(float delta, boolean spawn) {

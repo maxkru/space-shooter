@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import kriuchkov.maksim.spaceshooter.base.Ship;
 import kriuchkov.maksim.spaceshooter.pool.BulletPool;
 import kriuchkov.maksim.spaceshooter.pool.ExplosionPool;
+import kriuchkov.maksim.spaceshooter.utils.EnemyShipHandler;
 import ru.geekbrains.math.Rect;
 
 public class EnemyShip extends Ship {
@@ -14,10 +15,15 @@ public class EnemyShip extends Ship {
     private Vector2 vThroughScreen;
     private boolean movingIn;
     private int collisionDamage;
+    private EnemyShipHandler handler;
+    private float delayBetweenSpawns;
+    private float sinceLastSpawn;
+    private boolean spawns;
 
-    public EnemyShip(BulletPool bulletPool, ExplosionPool explosionPool, Sound bulletFireSound, Rect worldBounds) {
+    public EnemyShip(BulletPool bulletPool, ExplosionPool explosionPool, EnemyShipHandler handler, Sound bulletFireSound, Rect worldBounds) {
         this.bulletPool = bulletPool;
         this.explosionPool = explosionPool;
+        this.handler = handler;
         this.bulletFireSound = bulletFireSound;
         this.worldBounds = worldBounds;
 
@@ -41,7 +47,9 @@ public class EnemyShip extends Ship {
             float bulletVelocity,
             int bulletDamage,
             float delayBetweenShots,
-            int collisionDamage
+            int collisionDamage,
+            boolean spawns,
+            float delayBetweenSpawns
     ) {
         this.regions = regions;
         this.bulletTextureRegion = bulletTextureRegion;
@@ -55,6 +63,8 @@ public class EnemyShip extends Ship {
         this.bulletDamage = bulletDamage;
         this.delayBetweenShots = delayBetweenShots;
         this.collisionDamage = collisionDamage;
+        this.spawns = spawns;
+        this.delayBetweenSpawns = delayBetweenSpawns;
     }
 
     @Override
@@ -67,6 +77,13 @@ public class EnemyShip extends Ship {
             isShooting = true;
             movingIn = false;
         }
+        if (sinceLastSpawn < delayBetweenSpawns)
+            sinceLastSpawn += delta;
+        if (spawns && sinceLastSpawn  >= delayBetweenSpawns) {
+            handler.spawnKamikaze(pos);
+            sinceLastSpawn = 0;
+        }
+
         if (worldBounds.getBottom() > getTop())
             destroy(false);
     }

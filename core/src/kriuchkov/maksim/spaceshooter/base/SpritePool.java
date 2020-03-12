@@ -8,15 +8,18 @@ import java.util.List;
 public abstract class SpritePool<T extends Sprite> {
 
     private List<T> activeObjects;
+    private List<T> spawningObjects;
     private List<T> freeObjects;
 
     public SpritePool() {
         activeObjects = new ArrayList<>();
+        spawningObjects = new ArrayList<>();
         freeObjects = new ArrayList<>();
     }
 
     public SpritePool(int initialFree) {
         activeObjects = new ArrayList<>();
+        spawningObjects = new ArrayList<>();
         freeObjects = new ArrayList<>();
 
         for (int i = 0; i < initialFree; i++) {
@@ -32,12 +35,21 @@ public abstract class SpritePool<T extends Sprite> {
             object = createNewObject();
         else
             object = freeObjects.remove(freeObjects.size() - 1);
-        activeObjects.add(object);
-        System.out.printf("%s: active/free %d/%d\n", getClass().getSimpleName(), activeObjects.size(), freeObjects.size());
+        spawningObjects.add(object);
+        System.out.printf("%s: active/spawning/free %d/%d/%d\n", getClass().getSimpleName(), activeObjects.size(), spawningObjects.size(), freeObjects.size());
         return object;
     }
 
+    private void spawnAll() {
+        for(int i = spawningObjects.size() - 1; i >= 0; i--) {
+            T obj = spawningObjects.get(i);
+            spawningObjects.remove(i);
+            activeObjects.add(obj);
+        }
+    }
+
     public void updateAllActive(float delta) {
+        spawnAll();
         for(Sprite sprite : activeObjects) {
             if (!sprite.isDestroyed())
                 sprite.update(delta);
@@ -69,6 +81,7 @@ public abstract class SpritePool<T extends Sprite> {
 
     public void dispose() {
         freeObjects.clear();
+        spawningObjects.clear();
         activeObjects.clear();
     }
 
