@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import kriuchkov.maksim.spaceshooter.base.Ship;
+import kriuchkov.maksim.spaceshooter.base.Sprite;
 import kriuchkov.maksim.spaceshooter.pool.BulletPool;
 import kriuchkov.maksim.spaceshooter.pool.ExplosionPool;
 import kriuchkov.maksim.spaceshooter.utils.EnemyShipHandler;
@@ -19,6 +20,12 @@ public class EnemyShip extends Ship {
     private float delayBetweenSpawns;
     private float sinceLastSpawn;
     private boolean spawns;
+    private Sprite homingSprite;
+
+    private float shipVelocity;
+    private float bulletVelocity;
+
+    private Vector2 buf;
 
     public EnemyShip(BulletPool bulletPool, ExplosionPool explosionPool, EnemyShipHandler handler, Sound bulletFireSound, Rect worldBounds) {
         this.bulletPool = bulletPool;
@@ -33,6 +40,8 @@ public class EnemyShip extends Ship {
         this.bulletFireSoundVolume = 0.1f;
 
         this.vThroughScreen = new Vector2();
+
+        this.buf = new Vector2();
     }
 
     public void set(
@@ -65,12 +74,26 @@ public class EnemyShip extends Ship {
         this.collisionDamage = collisionDamage;
         this.spawns = spawns;
         this.delayBetweenSpawns = delayBetweenSpawns;
+
+        this.homingSprite = null;
+        this.shipVelocity = v.len();
+        this.bulletVelocity = bulletVelocity;
+
+        this.angle = 0;
     }
 
     @Override
     public void update(float delta) {
         super.update(delta);
-        this.pos.mulAdd(v, delta);
+
+        if (homingSprite == null)
+            this.pos.mulAdd(v, delta);
+        else {
+            buf.set(homingSprite.pos).sub(pos).setLength(shipVelocity);
+            this.pos.mulAdd(buf, delta);
+            angle = buf.angle() + 90;
+        }
+
         if (movingIn && worldBounds.getTop() > getTop()) {
             sinceLastShot = delayBetweenShots;
             v.set(vThroughScreen);
@@ -91,6 +114,8 @@ public class EnemyShip extends Ship {
     @Override
     protected void updateBulletEmitterPos() {
         bulletEmitterPos.set(pos.x, getBottom() + 0.01f);
+        if (homingSprite != null)
+            bulletV.set(homingSprite.pos).sub(pos).setLength(bulletVelocity);
     }
 
     public void movingIn() {
@@ -108,5 +133,9 @@ public class EnemyShip extends Ship {
 
     public int getCollisionDamage() {
         return collisionDamage;
+    }
+
+    public void setHomingSprite(Sprite sprite) {
+        homingSprite = sprite;
     }
 }

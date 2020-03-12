@@ -63,8 +63,8 @@ public class GameScreen extends BaseScreen {
         explosionSound = Gdx.audio.newSound(Gdx.files.internal("sounds/explosion.wav"));
         explosionPool = new ExplosionPool(atlasMain, explosionSound);
 
-        enemyShipHandler = new EnemyShipHandler(atlasMain, bulletPool, explosionPool);
         playerShip = new PlayerShip(atlasMain, bulletPool, explosionPool);
+        enemyShipHandler = new EnemyShipHandler(atlasMain, bulletPool, explosionPool, playerShip);
         bg = new Texture("background_simple.png");
         background = new Background(bg);
 

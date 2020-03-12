@@ -13,6 +13,7 @@ import kriuchkov.maksim.spaceshooter.pool.BulletPool;
 import kriuchkov.maksim.spaceshooter.pool.EnemyShipPool;
 import kriuchkov.maksim.spaceshooter.pool.ExplosionPool;
 import kriuchkov.maksim.spaceshooter.sprite.EnemyShip;
+import kriuchkov.maksim.spaceshooter.sprite.PlayerShip;
 import ru.geekbrains.math.Rect;
 import ru.geekbrains.math.Rnd;
 import ru.geekbrains.utils.Regions;
@@ -76,8 +77,9 @@ public class EnemyShipHandler {
     private Vector2 vMedium;
     private Vector2 vBig;
 
+    private PlayerShip playerShip;
 
-    public EnemyShipHandler(TextureAtlas atlas, BulletPool bulletPool, ExplosionPool explosionPool) {
+    public EnemyShipHandler(TextureAtlas atlas, BulletPool bulletPool, ExplosionPool explosionPool, PlayerShip playerShip) {
         this.atlas = atlas;
 
         this.smallShipRegions = Regions.split(atlas.findRegion("enemy0"), 1, 2, 2);
@@ -98,6 +100,8 @@ public class EnemyShipHandler {
 
         this.bulletFireSound = Gdx.audio.newSound(Gdx.files.internal("sounds/laser.wav"));
         this.enemyShipPool = new EnemyShipPool(bulletPool, explosionPool, this, bulletFireSound);
+
+        this.playerShip = playerShip;
     }
 
     public void setWorldBounds(Rect worldBounds) {
@@ -186,6 +190,7 @@ public class EnemyShipHandler {
                 0f
         );
         enemyShip.movingIn();
+        enemyShip.setHomingSprite(playerShip);
     }
 
     public void update(float delta, boolean spawn) {
