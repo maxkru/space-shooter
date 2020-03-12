@@ -3,7 +3,6 @@ package kriuchkov.maksim.spaceshooter.base;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public abstract class SpritePool<T extends Sprite> {

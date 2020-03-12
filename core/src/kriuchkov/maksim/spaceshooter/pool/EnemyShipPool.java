@@ -1,7 +1,6 @@
 package kriuchkov.maksim.spaceshooter.pool;
 
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import kriuchkov.maksim.spaceshooter.base.SpritePool;
 import kriuchkov.maksim.spaceshooter.sprite.EnemyShip;

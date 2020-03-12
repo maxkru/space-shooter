@@ -1,9 +1,6 @@
 package kriuchkov.maksim.spaceshooter.sprite;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import kriuchkov.maksim.spaceshooter.base.Sprite;

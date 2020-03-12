@@ -5,11 +5,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import kriuchkov.maksim.spaceshooter.base.Ship;
-import kriuchkov.maksim.spaceshooter.base.Sprite;
 import kriuchkov.maksim.spaceshooter.pool.BulletPool;
 import kriuchkov.maksim.spaceshooter.pool.ExplosionPool;
 import ru.geekbrains.math.Rect;
-import ru.geekbrains.utils.Regions;
 
 public class EnemyShip extends Ship {
 

@@ -2,7 +2,6 @@ package kriuchkov.maksim.spaceshooter.sprite;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import kriuchkov.maksim.spaceshooter.base.ScaledButton;
 import ru.geekbrains.math.Rect;
