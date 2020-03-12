@@ -25,7 +25,6 @@ public class Bullet extends Sprite {
         setHeightProportion(heightProportion);
         this.worldBounds = worldBounds;
         this.damage = damage;
-
     }
 
     @Override
@@ -37,5 +36,9 @@ public class Bullet extends Sprite {
 
     public int getDamage() {
         return damage;
+    }
+
+    public Sprite getOwner() {
+        return owner;
     }
 }

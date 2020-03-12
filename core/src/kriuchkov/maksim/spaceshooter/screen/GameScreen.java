@@ -1,6 +1,7 @@
 package kriuchkov.maksim.spaceshooter.screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
@@ -11,7 +12,10 @@ import com.badlogic.gdx.math.Vector2;
 import kriuchkov.maksim.spaceshooter.base.BaseScreen;
 import kriuchkov.maksim.spaceshooter.pool.BulletPool;
 import kriuchkov.maksim.spaceshooter.pool.ExplosionPool;
+import kriuchkov.maksim.spaceshooter.sprite.Bullet;
+import kriuchkov.maksim.spaceshooter.sprite.ButtonNewGame;
 import kriuchkov.maksim.spaceshooter.sprite.EnemyShip;
+import kriuchkov.maksim.spaceshooter.sprite.MessageGameOver;
 import kriuchkov.maksim.spaceshooter.utils.EnemyShipHandler;
 import kriuchkov.maksim.spaceshooter.sprite.Background;
 import kriuchkov.maksim.spaceshooter.sprite.PlayerShip;
@@ -20,6 +24,12 @@ import ru.geekbrains.math.Rect;
 
 public class GameScreen extends BaseScreen {
 
+    private enum GameState {
+        PLAYING, PAUSED, GAME_OVER
+    }
+
+    private GameState gameState;
+    private GameState prePauseGameState;
 
     private TextureAtlas atlas;
     private TextureAtlas atlasMain;
@@ -30,6 +40,9 @@ public class GameScreen extends BaseScreen {
     private PlayerShip playerShip;
 
     private Star[] stars;
+
+    private MessageGameOver messageGameOver;
+    private ButtonNewGame buttonNewGame;
 
     private BulletPool bulletPool;
     private ExplosionPool explosionPool;
@@ -60,39 +73,55 @@ public class GameScreen extends BaseScreen {
             stars[i] = new Star(atlas);
         }
 
-
+        gameState = GameState.PLAYING;
+        prePauseGameState = GameState.PLAYING;
 
         gameMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/music.mp3"));
         gameMusic.setLooping(true);
         gameMusic.play();
+
+        messageGameOver = new MessageGameOver(atlasMain);
+        buttonNewGame = new ButtonNewGame(atlasMain, this);
     }
 
     @Override
     public boolean keyDown(int keycode) {
-        return playerShip.keyDown(keycode);
+        if (keycode == Input.Keys.P) {
+            if (gameState == GameState.PAUSED)
+                resume();
+            else
+                pause();
+        }
+        if (keycode == Input.Keys.R && gameState == GameState.GAME_OVER)
+            reset();
+        return gameState == GameState.PLAYING && playerShip.keyDown(keycode);
     }
 
     @Override
     public boolean keyUp(int keycode) {
-        return playerShip.keyUp(keycode);
+        return gameState == GameState.PLAYING && playerShip.keyUp(keycode);
     }
 
     @Override
     public boolean touchDown(Vector2 touch, int pointer, int button) {
         super.touchDown(touch, pointer, button);
-        return playerShip.touchDown(touch, pointer, button);
+        if (gameState == GameState.GAME_OVER)
+            buttonNewGame.touchDown(touch, pointer, button);
+        return gameState == GameState.PLAYING && playerShip.touchDown(touch, pointer, button);
     }
 
     @Override
     public boolean touchDragged(Vector2 touch, int pointer) {
         super.touchDragged(touch, pointer);
-        return playerShip.touchDragged(touch, pointer);
+        return gameState == GameState.PLAYING && playerShip.touchDragged(touch, pointer);
     }
 
     @Override
     public boolean touchUp(Vector2 touch, int pointer, int button) {
         super.touchUp(touch, pointer, button);
-        return playerShip.touchUp(touch, pointer, button);
+        if (gameState == GameState.GAME_OVER)
+            buttonNewGame.touchUp(touch, pointer, button);
+        return gameState == GameState.PLAYING && playerShip.touchUp(touch, pointer, button);
     }
 
     @Override
@@ -110,6 +139,8 @@ public class GameScreen extends BaseScreen {
         enemyShipHandler.setWorldBounds(worldBounds);
         for(Star star : stars)
             star.resize(worldBounds);
+        messageGameOver.resize(worldBounds);
+        buttonNewGame.resize(worldBounds);
     }
 
     @Override
@@ -124,18 +155,15 @@ public class GameScreen extends BaseScreen {
     }
 
     private void update(float delta) {
-        playerShip.update(delta);
-
         for(Star star : stars)
             star.update(delta);
-
-        enemyShipHandler.update(delta);
-
-        checkCollisions();
-
-        bulletPool.updateAllActive(delta);
-
         explosionPool.updateAllActive(delta);
+        if (gameState == GameState.PLAYING) {
+            enemyShipHandler.update(delta, true);
+            bulletPool.updateAllActive(delta);
+            playerShip.update(delta);
+            checkCollisions();
+        }
     }
 
     private void draw() {
@@ -145,10 +173,16 @@ public class GameScreen extends BaseScreen {
         background.draw(batch);
         for(Star star : stars)
             star.draw(batch);
-        bulletPool.drawAllActive(batch);
-        enemyShipHandler.drawAllActive(batch);
+        if (gameState == GameState.PLAYING) {
+            bulletPool.drawAllActive(batch);
+            enemyShipHandler.drawAllActive(batch);
+            playerShip.draw(batch);
+        }
         explosionPool.drawAllActive(batch);
-        playerShip.draw(batch);
+        if (gameState == GameState.GAME_OVER) {
+            messageGameOver.draw(batch);
+            buttonNewGame.draw(batch);
+        }
         batch.end();
     }
 
@@ -159,16 +193,56 @@ public class GameScreen extends BaseScreen {
     }
 
     public void checkCollisions() {
-        enemyShipHandler.checkCollisions(playerShip);
+        for (EnemyShip enemyShip : enemyShipHandler.getActiveEnemyShips()) {
+            float minDist = enemyShip.getHalfHeight() + playerShip.getHalfHeight();
+            if (enemyShip.pos.dst2(playerShip.pos) < minDist * minDist) {
+                enemyShip.destroy();
+                playerShip.damage(enemyShip.getCollisionDamage());
+            }
+        }
+
+        for (Bullet bullet : bulletPool.getActiveObjects()) {
+            if (bullet.getOwner() == playerShip) {
+                for (EnemyShip enemyShip : enemyShipHandler.getActiveEnemyShips()) {
+                    if (enemyShip.collidesWith(bullet)) {
+                        enemyShip.damage(bullet.getDamage());
+                        bullet.destroy();
+                    }
+                }
+            } else {
+                if (playerShip.collidesWith(bullet)) {
+                    playerShip.damage(bullet.getDamage());
+                    bullet.destroy();
+                }
+            }
+        }
+
+        if (playerShip.isDestroyed()) {
+            gameState = GameState.GAME_OVER;
+            gameMusic.stop();
+        }
     }
 
     @Override
     public void pause() {
         gameMusic.pause();
+        prePauseGameState = gameState;
+        gameState = GameState.PAUSED;
     }
 
     @Override
     public void resume() {
+        gameMusic.play();
+        gameState = prePauseGameState;
+    }
+
+    public void reset() {
+        for (Bullet bullet : bulletPool.getActiveObjects()) {
+            bullet.destroy();
+        }
+        enemyShipHandler.reset();
+        playerShip.reset();
+        gameState = GameState.PLAYING;
         gameMusic.play();
     }
 }
