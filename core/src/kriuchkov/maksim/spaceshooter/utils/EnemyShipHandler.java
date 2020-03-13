@@ -72,6 +72,7 @@ public class EnemyShipHandler {
 
     private Vector2 spawnLocation;
 
+    private int level;
 
     private Vector2 vInSmall;
     private Vector2 vInMedium;
@@ -126,7 +127,7 @@ public class EnemyShipHandler {
                     SMALL_SHIP_HP,
                     SMALL_BULLET_HEIGHT,
                     SMALL_BULLET_VELOCITY,
-                    SMALL_BULLET_DAMAGE,
+                    SMALL_BULLET_DAMAGE * level,
                     SMALL_SHIP_DELAY_BETWEEN_SHOTS,
                     SMALL_SHIP_COLLISION_DAMAGE,
                     SMALL_SHIP_POINTS,
@@ -144,7 +145,7 @@ public class EnemyShipHandler {
                     MEDIUM_SHIP_HP,
                     MEDIUM_BULLET_HEIGHT,
                     MEDIUM_BULLET_VELOCITY,
-                    MEDIUM_BULLET_DAMAGE,
+                    MEDIUM_BULLET_DAMAGE * level,
                     MEDIUM_SHIP_DELAY_BETWEEN_SHOTS,
                     MEDIUM_SHIP_COLLISION_DAMAGE,
                     MEDIUM_SHIP_POINTS,
@@ -162,7 +163,7 @@ public class EnemyShipHandler {
                     BIG_SHIP_HP,
                     BIG_BULLET_HEIGHT,
                     BIG_BULLET_VELOCITY,
-                    BIG_BULLET_DAMAGE,
+                    BIG_BULLET_DAMAGE * level,
                     BIG_SHIP_DELAY_BETWEEN_SHOTS,
                     BIG_SHIP_COLLISION_DAMAGE,
                     BIG_SHIP_POINTS,
@@ -189,7 +190,7 @@ public class EnemyShipHandler {
                 SMALL_SHIP_HP,
                 SMALL_BULLET_HEIGHT,
                 SMALL_BULLET_VELOCITY,
-                SMALL_BULLET_DAMAGE,
+                SMALL_BULLET_DAMAGE * level,
                 SMALL_SHIP_DELAY_BETWEEN_SHOTS,
                 SMALL_SHIP_COLLISION_DAMAGE,
                 SMALL_SHIP_POINTS,
@@ -200,12 +201,13 @@ public class EnemyShipHandler {
         enemyShip.setHomingSprite(playerShip);
     }
 
-    public void update(float delta, boolean spawn) {
+    public void update(float delta, boolean spawn, int level) {
         spawnTimer += delta;
         if (spawn && spawnTimer >= spawnInterval) {
             spawnTimer = 0f;
             spawn();
         }
+        this.level = level;
         enemyShipPool.updateAllActive(delta);
     }
 

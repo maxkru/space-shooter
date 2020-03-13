@@ -65,6 +65,7 @@ public class GameScreen extends BaseScreen {
 
     private int score;
     private int gameLevel;
+    private int nextGameLevel;
 
     private StringBuilder sbTextPrint;
 
@@ -102,6 +103,7 @@ public class GameScreen extends BaseScreen {
         font.setSize(FONT_SIZE);
         sbTextPrint = new StringBuilder();
 
+        score = 0;
         gameLevel = 1;
     }
 
@@ -177,11 +179,13 @@ public class GameScreen extends BaseScreen {
     }
 
     private void update(float delta) {
+        gameLevel = score / 100 + 1;
+
         for(Star star : stars)
             star.update(delta);
         explosionPool.updateAllActive(delta);
         if (gameState == GameState.PLAYING) {
-            enemyShipHandler.update(delta, true);
+            enemyShipHandler.update(delta, true, gameLevel);
             bulletPool.updateAllActive(delta);
             playerShip.update(delta);
             checkCollisions();
