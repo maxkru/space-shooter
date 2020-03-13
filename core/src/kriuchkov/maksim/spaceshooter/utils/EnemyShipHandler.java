@@ -168,7 +168,7 @@ public class EnemyShipHandler {
                 Rnd.nextFloat(worldBounds.getRight() - ship.getHalfWidth(), worldBounds.getLeft() + ship.getHalfWidth()),
                 worldBounds.getTop() + ship.getHalfHeight()
         );
-        ship.movingIn();
+        ship.moveIn();
     }
 
     public void spawnKamikaze(Vector2 pos) {
@@ -189,7 +189,7 @@ public class EnemyShipHandler {
                 false,
                 0f
         );
-        enemyShip.movingIn();
+        enemyShip.moveIn();
         enemyShip.setHomingSprite(playerShip);
     }
 
