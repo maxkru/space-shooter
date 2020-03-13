@@ -26,8 +26,11 @@ import ru.geekbrains.math.Rect;
 public class GameScreen extends BaseScreen {
 
     private static final int STAR_COUNT = 32;
-    private static final float FONT_SIZE = 0.05f;
+    private static final float FONT_SIZE = 0.03f;
 
+    private static final String SCORE_TEXT = "Score: ";
+    private static final String HP_TEXT = "HP: ";
+    private static final float TEXT_PADDING = 0.01f;
 
     private enum GameState {
         PLAYING, PAUSED, GAME_OVER
@@ -58,6 +61,9 @@ public class GameScreen extends BaseScreen {
 
     private Font font;
 
+    private int score;
+
+    private StringBuilder sbTextPrint;
 
     @Override
     public void show() {
@@ -90,6 +96,8 @@ public class GameScreen extends BaseScreen {
         buttonNewGame = new ButtonNewGame(atlasMain, this);
 
         font = new Font("fonts/Carlito.fnt", "fonts/Carlito.png");
+        font.setSize(FONT_SIZE);
+        sbTextPrint = new StringBuilder();
     }
 
     @Override
@@ -149,7 +157,6 @@ public class GameScreen extends BaseScreen {
             star.resize(worldBounds);
         messageGameOver.resize(worldBounds);
         buttonNewGame.resize(worldBounds);
-        font.dispose();
     }
 
     @Override
@@ -161,6 +168,7 @@ public class GameScreen extends BaseScreen {
         playerShip.dispose();
         gameMusic.dispose();
         enemyShipHandler.dispose();
+        font.dispose();
     }
 
     private void update(float delta) {
@@ -208,6 +216,7 @@ public class GameScreen extends BaseScreen {
             if (enemyShip.pos.dst2(playerShip.pos) < minDist * minDist) {
                 enemyShip.destroy();
                 playerShip.damage(enemyShip.getCollisionDamage());
+                score += enemyShip.getPointsForDestruction();
             }
         }
 
@@ -217,6 +226,8 @@ public class GameScreen extends BaseScreen {
                     if (enemyShip.collidesWith(bullet)) {
                         enemyShip.damage(bullet.getDamage());
                         bullet.destroy();
+                        if (enemyShip.isDestroyed())
+                            score += enemyShip.getPointsForDestruction();
                     }
                 }
             } else {
@@ -257,6 +268,8 @@ public class GameScreen extends BaseScreen {
     }
 
     private void printInfo() {
-        // TODO
+        sbTextPrint.setLength(0);
+        font.draw(batch, sbTextPrint.append(SCORE_TEXT).append(score), worldBounds.getLeft() + TEXT_PADDING, worldBounds.getTop() - TEXT_PADDING);
     }
+
 }

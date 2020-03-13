@@ -25,6 +25,8 @@ public class EnemyShip extends Ship {
     private float shipVelocity;
     private float bulletVelocity;
 
+    private int pointsForDestruction;
+
     private Vector2 buf;
 
     /**
@@ -70,6 +72,7 @@ public class EnemyShip extends Ship {
      * @param bulletDamage damage dealt by bullets emitted by this ship
      * @param delayBetweenShots amount of time (in seconds) between this ship's two bullet shots
      * @param collisionDamage damage dealt to player ship upon colliding with this ship
+     * @param pointsForDestruction how much will player's score increase when this ship is destroyed by player ship
      * @param spawns if true, this ship will spawn small ships occasionally
      * @param delayBetweenSpawns if 'spawns' parameter is 'true', amount of time (in seconds) between two spawns,
      *                           else not used (can safely be anything)
@@ -87,6 +90,7 @@ public class EnemyShip extends Ship {
             int bulletDamage,
             float delayBetweenShots,
             int collisionDamage,
+            int pointsForDestruction,
             boolean spawns,
             float delayBetweenSpawns
     ) {
@@ -102,6 +106,7 @@ public class EnemyShip extends Ship {
         this.bulletDamage = bulletDamage;
         this.delayBetweenShots = delayBetweenShots;
         this.collisionDamage = collisionDamage;
+        this.pointsForDestruction = pointsForDestruction;
         this.spawns = spawns;
         this.delayBetweenSpawns = delayBetweenSpawns;
 
@@ -194,5 +199,12 @@ public class EnemyShip extends Ship {
      * */
     public void setHomingSprite(Sprite sprite) {
         homingSprite = sprite;
+    }
+
+    /**
+     * @return how much will player's score increase when this ship is destroyed by player ship
+     * */
+    public int getPointsForDestruction() {
+        return pointsForDestruction;
     }
 }

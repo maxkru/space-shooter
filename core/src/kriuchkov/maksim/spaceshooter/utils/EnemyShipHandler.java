@@ -30,6 +30,7 @@ public class EnemyShipHandler {
     private static final int SMALL_SHIP_HP = 5;
     private static final int SMALL_SHIP_COLLISION_DAMAGE = 10;
     private static final float SMALL_PROBABILITY = 0.5f;
+    private static final int SMALL_SHIP_POINTS = 1;
 
     private static final float MEDIUM_SHIP_HEIGHT = 0.15f;
     private static final float MEDIUM_SHIP_VELOCITY = 0.05f;
@@ -41,6 +42,7 @@ public class EnemyShipHandler {
     private static final int MEDIUM_SHIP_HP = 40;
     private static final int MEDIUM_SHIP_COLLISION_DAMAGE = 30;
     private static final float MEDIUM_PROBABILITY = 0.3f;
+    private static final int MEDIUM_SHIP_POINTS = 8;
 
     private static final float BIG_SHIP_HEIGHT = 0.2f;
     private static final float BIG_SHIP_VELOCITY = 0.01f;
@@ -53,6 +55,7 @@ public class EnemyShipHandler {
     private static final int BIG_SHIP_COLLISION_DAMAGE = 75;
     private static final float BIG_SHIP_KAMIKAZE_SPAWN_DELAY = 10f;
     private static final float BIG_PROBABILITY = 0.2f;
+    private static final int BIG_SHIP_POINTS = 20;
 
     private EnemyShipPool enemyShipPool;
     private TextureAtlas atlas;
@@ -126,6 +129,7 @@ public class EnemyShipHandler {
                     SMALL_BULLET_DAMAGE,
                     SMALL_SHIP_DELAY_BETWEEN_SHOTS,
                     SMALL_SHIP_COLLISION_DAMAGE,
+                    SMALL_SHIP_POINTS,
                     false,
                     0f
             );
@@ -143,6 +147,7 @@ public class EnemyShipHandler {
                     MEDIUM_BULLET_DAMAGE,
                     MEDIUM_SHIP_DELAY_BETWEEN_SHOTS,
                     MEDIUM_SHIP_COLLISION_DAMAGE,
+                    MEDIUM_SHIP_POINTS,
                     false,
                     0f
             );
@@ -160,6 +165,7 @@ public class EnemyShipHandler {
                     BIG_BULLET_DAMAGE,
                     BIG_SHIP_DELAY_BETWEEN_SHOTS,
                     BIG_SHIP_COLLISION_DAMAGE,
+                    BIG_SHIP_POINTS,
                     true,
                     BIG_SHIP_KAMIKAZE_SPAWN_DELAY
             );
@@ -186,6 +192,7 @@ public class EnemyShipHandler {
                 SMALL_BULLET_DAMAGE,
                 SMALL_SHIP_DELAY_BETWEEN_SHOTS,
                 SMALL_SHIP_COLLISION_DAMAGE,
+                SMALL_SHIP_POINTS,
                 false,
                 0f
         );
@@ -224,4 +231,5 @@ public class EnemyShipHandler {
             enemyShip.destroy(false);
         }
     }
+
 }
