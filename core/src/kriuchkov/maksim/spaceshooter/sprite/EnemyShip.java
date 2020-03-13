@@ -110,6 +110,7 @@ public class EnemyShip extends Ship {
         this.bulletVelocity = bulletVelocity;
 
         this.angle = 0;
+        this.sinceLastSpawn = 0;
     }
 
     /**
