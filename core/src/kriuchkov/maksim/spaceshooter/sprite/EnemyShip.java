@@ -32,7 +32,7 @@ public class EnemyShip extends Ship {
     /**
      * Constructor for EnemyShip. Many of the created object's parameters are not initialized,
      * and must be set using the set() method. (Note that this must not be called directly.
-     * Obtaining a new EnemyShip entity must be done by invoking EnemyShipPool.obtain())
+     * Obtaining a new EnemyShip entity must be done by calling EnemyShipPool.obtain())
      * @param bulletPool BulletPool that this ship will be using to spawn bullets
      * @param explosionPool ExplosionPool that this ship will be using to spawn explosions (when destroyed)
      * @param handler EnemyShipHandler that spawned this ship

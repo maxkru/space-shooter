@@ -33,6 +33,9 @@ public abstract class Ship extends Sprite {
     protected float damageAnimationTimer;
     protected int hp;
 
+    /**
+     * This constructor doesn't set textures.
+     * */
     protected Ship() {
         isShooting = true;
     }
@@ -59,35 +62,62 @@ public abstract class Ship extends Sprite {
         }
     }
 
-    protected void shoot() {
+    /**
+     * Emits a bullet from this ship.
+     * Every time this method is called, {@code updateBulletEmitterPos()} is called, too, so that
+     * the bullet is fired from the correct position.
+     * */
+    private void shoot() {
         Bullet bullet = bulletPool.obtain();
         updateBulletEmitterPos();
         bullet.set(this, bulletTextureRegion, bulletEmitterPos, bulletV, bulletHeight, worldBounds, bulletDamage);
         bulletFireSound.play(bulletFireSoundVolume);
     }
 
+    /**
+     * Method that updates the initial position of fired bullets. Called by {@code shoot()}.
+     * */
     protected abstract void updateBulletEmitterPos();
 
-    protected void explode() {
+    /**
+     * Spawns an explosion of the same height as this sprite, centered at this ship's center.
+     * */
+    private void explode() {
         Explosion explosion = explosionPool.obtain();
         explosion.set(getHeight(), pos);
     }
 
+    /**
+     * Same as calling {@code destroy(true)}, that is, with explosion.
+     * */
     @Override
     public void destroy() {
         destroy(true);
     }
 
+    /**
+     * Sets 'destroyed' flag to 'true'. Also, if parameter is true, spawns an explosion of the same height
+     * as this sprite, centered at this ship's center.
+     * @param explosion if true, spawns explosion
+     * */
     public void destroy(boolean explosion) {
         super.destroy();
         if (explosion)
             explode();
     }
 
+    /**
+     * Disposes all resources held by this object.
+     * */
     public void dispose() {
         bulletFireSound.dispose();
     }
 
+    /**
+     * Subtracts 'damage' from this ship's HP. If HP gets non-positive, ship gets destroyed.
+     * Also, starts 'damage taken' animation.
+     * @param damageAmount how much damage the ship will take
+     * */
     public void damage(int damageAmount) {
         this.hp -= damageAmount;
         if (hp <= 0) {

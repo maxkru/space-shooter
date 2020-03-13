@@ -32,7 +32,11 @@ public class PlayerShip extends Ship {
     private static final float INITIAL_POS_X = 0f;
     private static final float INITIAL_POS_Y = -0.25f;
 
-
+    /**
+     * @param atlas TextureAtlas which contains 'main_ship' region with 2 frames
+     * @param bulletPool BulletPool that will be used by this ship to emit bullets
+     * @param explosionPool ExplosionPool that will be used by this ship to spawn explosions
+     * */
     public PlayerShip(TextureAtlas atlas, BulletPool bulletPool, ExplosionPool explosionPool) {
         super(atlas.findRegion("main_ship"), 1 , 2, 2);
 
@@ -85,6 +89,10 @@ public class PlayerShip extends Ship {
         return super.touchDragged(touch, pointer);
     }
 
+    /**
+     * Updates data for this PlayerShip (firing bullets and moving using keyboard and touch/mouse).
+     * @param delta amount of time (in seconds) that has passed since last update.
+     * */
     @Override
     public void update(float delta) {
         super.update(delta);
@@ -125,6 +133,13 @@ public class PlayerShip extends Ship {
         bulletEmitterPos.set(pos.x, getTop() - 0.01f);
     }
 
+    /**
+     * Performs action when a key is pressed.
+     * 'Down', 'Up', 'Right', 'Left' set the corresponding 'moving____' flags to true (which is set to false when the key is released).
+     * 'Space' sets the 'manualShooting' flag to true (which is set to false when the key is released).
+     * 'V' toggles the 'autoShooting' flag.
+     * @param keyCode code of the pressed key (see {@link Input.Keys}).
+     * */
     public boolean keyDown(int keyCode) {
         movingByKeyboard = true;
 
@@ -151,6 +166,12 @@ public class PlayerShip extends Ship {
         return true;
     }
 
+    /**
+     * Performs action when a key is released.
+     * 'Down', 'Up', 'Right', 'Left' set the corresponding 'moving____' flags to false.
+     * 'Space' sets the 'manualShooting' flag to false.
+     * @param keyCode code of the released key (see {@link Input.Keys}).
+     * */
     public boolean keyUp(int keyCode) {
         switch (keyCode) {
             case Input.Keys.DOWN:
@@ -175,10 +196,20 @@ public class PlayerShip extends Ship {
         return true;
     }
 
+    /**
+     * Checks whether this ship collides with the bullet.
+     * Note that the 'collision box' is a rectangle, the back side of the sprite.
+     * @param bullet the Bullet, collision with which is checked
+     * @return 'true' if there is collision, 'false' if there is no collision
+     * */
     public boolean collidesWith(Bullet bullet) {
         return bullet.getRight() > getLeft() && bullet.getLeft() < getRight() && bullet.getBottom() < this.pos.y && bullet.getTop() > getBottom();
     }
 
+    /**
+     * Resets this PlayerShip, initializing movement flags, destruction flag, position,
+     * and setting hp to maximum.
+     * */
     public void reset() {
         hp = PLAYER_SHIP_MAX_HP;
         pos.set(INITIAL_POS_X, INITIAL_POS_Y);
@@ -194,6 +225,9 @@ public class PlayerShip extends Ship {
         flushDestroyed();
     }
 
+    /**
+     * @return this ship's velocity vector
+     * */
     public Vector2 getV() {
         return v;
     }
