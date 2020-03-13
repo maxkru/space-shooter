@@ -97,4 +97,10 @@ public abstract class Ship extends Sprite {
         frame = 1;
     }
 
+    /**
+     * @return current 'hp' of this ship - minimal damage that it must take to be destroyed
+     * */
+    public int getHp() {
+        return hp;
+    }
 }

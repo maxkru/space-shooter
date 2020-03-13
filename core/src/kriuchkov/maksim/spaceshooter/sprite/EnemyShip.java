@@ -154,7 +154,7 @@ public class EnemyShip extends Ship {
 
     @Override
     protected void updateBulletEmitterPos() {
-        bulletEmitterPos.set(pos.x, getBottom() + 0.01f);
+        bulletEmitterPos.set(pos.x, getBottom() + 0.01f); // FIXME: needs correct logic for angle != 0
         if (homingSprite != null)
             bulletV.set(homingSprite.pos).sub(pos).setLength(bulletVelocity);
     }
@@ -165,13 +165,6 @@ public class EnemyShip extends Ship {
     public void moveIn() {
         this.isShooting = false;
         this.movingIn = true;
-    }
-
-    /**
-     * @return current 'hp' of this ship - minimal damage that it must take to be destroyed
-     * */
-    public int getHp() {
-        return hp;
     }
 
     /**
