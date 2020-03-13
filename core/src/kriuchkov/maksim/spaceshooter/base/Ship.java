@@ -91,6 +91,7 @@ public abstract class Ship extends Sprite {
     public void damage(int damageAmount) {
         this.hp -= damageAmount;
         if (hp <= 0) {
+            hp = 0;
             destroy();
         }
         damageAnimationTimer = 0f;

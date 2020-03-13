@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Align;
 
 import kriuchkov.maksim.spaceshooter.base.BaseScreen;
 import kriuchkov.maksim.spaceshooter.pool.BulletPool;
@@ -30,6 +31,7 @@ public class GameScreen extends BaseScreen {
 
     private static final String SCORE_TEXT = "Score: ";
     private static final String HP_TEXT = "HP: ";
+    private static final String LEVEL_TEXT = "Level ";
     private static final float TEXT_PADDING = 0.01f;
 
     private enum GameState {
@@ -62,6 +64,7 @@ public class GameScreen extends BaseScreen {
     private Font font;
 
     private int score;
+    private int gameLevel;
 
     private StringBuilder sbTextPrint;
 
@@ -98,6 +101,8 @@ public class GameScreen extends BaseScreen {
         font = new Font("fonts/Carlito.fnt", "fonts/Carlito.png");
         font.setSize(FONT_SIZE);
         sbTextPrint = new StringBuilder();
+
+        gameLevel = 1;
     }
 
     @Override
@@ -265,11 +270,19 @@ public class GameScreen extends BaseScreen {
         playerShip.reset();
         gameState = GameState.PLAYING;
         gameMusic.play();
+        score = 0;
+        gameLevel = 1;
     }
 
     private void printInfo() {
         sbTextPrint.setLength(0);
-        font.draw(batch, sbTextPrint.append(SCORE_TEXT).append(score), worldBounds.getLeft() + TEXT_PADDING, worldBounds.getTop() - TEXT_PADDING);
+        font.draw(batch, sbTextPrint.append(SCORE_TEXT).append(score), worldBounds.getLeft() + TEXT_PADDING, worldBounds.getTop() - TEXT_PADDING, Align.left);
+
+        sbTextPrint.setLength(0);
+        font.draw(batch, sbTextPrint.append(HP_TEXT).append(playerShip.getHp()), 0f, worldBounds.getTop() - TEXT_PADDING, Align.center);
+
+        sbTextPrint.setLength(0);
+        font.draw(batch, sbTextPrint.append(LEVEL_TEXT).append(gameLevel), worldBounds.getRight() - TEXT_PADDING, worldBounds.getTop() - TEXT_PADDING, Align.right);
     }
 
 }
