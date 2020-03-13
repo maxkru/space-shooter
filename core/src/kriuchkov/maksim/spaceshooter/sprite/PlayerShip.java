@@ -20,7 +20,6 @@ public class PlayerShip extends Ship {
     private boolean movingDown;
     private boolean movingLeft;
     private boolean movingRight;
-    private Vector2 keyMovementDirection;
 
     private boolean manualShooting;
     private boolean autoShooting;
@@ -38,7 +37,6 @@ public class PlayerShip extends Ship {
         super(atlas.findRegion("main_ship"), 1 , 2, 2);
 
         attractor = new Vector2();
-        keyMovementDirection = new Vector2();
 
         reset();
 
@@ -95,17 +93,19 @@ public class PlayerShip extends Ship {
             v.set(attractor).sub(pos).setLength(SHIP_VELOCITY);
             pos.mulAdd(v, delta);
         } else if (movingByKeyboard) {
-            keyMovementDirection.set(0,0);
+            v.set(0,0);
             if (movingDown)
-                keyMovementDirection.add(0,-1f);
+                v.add(0,-1f);
             if (movingUp)
-                keyMovementDirection.add(0,1f);
+                v.add(0,1f);
             if (movingLeft)
-                keyMovementDirection.add(-1f,0);
+                v.add(-1f,0);
             if (movingRight)
-                keyMovementDirection.add(1f,0);
-            keyMovementDirection.setLength(SHIP_VELOCITY);
-            pos.mulAdd(keyMovementDirection, delta);
+                v.add(1f,0);
+            v.setLength(SHIP_VELOCITY);
+            pos.mulAdd(v, delta);
+        } else {
+            v.setZero();
         }
 
         if (pos.y > -getHalfHeight())
@@ -192,5 +192,9 @@ public class PlayerShip extends Ship {
         movingDown = movingUp = movingRight = movingLeft = false;
 
         flushDestroyed();
+    }
+
+    public Vector2 getV() {
+        return v;
     }
 }

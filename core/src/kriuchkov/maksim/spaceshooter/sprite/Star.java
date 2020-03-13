@@ -28,6 +28,10 @@ public class Star extends Sprite {
     public void update(float delta) {
         pos.mulAdd(v, delta);
 
+        checkAndHandleBounds();
+    }
+
+    protected void checkAndHandleBounds() {
         if (getLeft() > worldBounds.getRight())
             setRight(worldBounds.getLeft());
 

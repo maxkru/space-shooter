@@ -20,6 +20,7 @@ import kriuchkov.maksim.spaceshooter.sprite.EnemyShip;
 import kriuchkov.maksim.spaceshooter.sprite.MessageGameOver;
 import kriuchkov.maksim.spaceshooter.sprite.PlayerShip;
 import kriuchkov.maksim.spaceshooter.sprite.Star;
+import kriuchkov.maksim.spaceshooter.sprite.TrackingStar;
 import kriuchkov.maksim.spaceshooter.utils.EnemyShipHandler;
 import kriuchkov.maksim.spaceshooter.utils.Font;
 import ru.geekbrains.math.Rect;
@@ -49,7 +50,7 @@ public class GameScreen extends BaseScreen {
 
     private PlayerShip playerShip;
 
-    private Star[] stars;
+    private TrackingStar[] stars;
 
     private MessageGameOver messageGameOver;
     private ButtonNewGame buttonNewGame;
@@ -84,9 +85,9 @@ public class GameScreen extends BaseScreen {
         bg = new Texture("background_simple.png");
         background = new Background(bg);
 
-        stars = new Star[STAR_COUNT];
+        stars = new TrackingStar[STAR_COUNT];
         for(int i = 0; i < STAR_COUNT; i++) {
-            stars[i] = new Star(atlas);
+            stars[i] = new TrackingStar(atlas, playerShip.getV());
         }
 
         gameState = GameState.PLAYING;
