@@ -12,17 +12,22 @@ import com.badlogic.gdx.math.Vector2;
 import kriuchkov.maksim.spaceshooter.base.BaseScreen;
 import kriuchkov.maksim.spaceshooter.pool.BulletPool;
 import kriuchkov.maksim.spaceshooter.pool.ExplosionPool;
+import kriuchkov.maksim.spaceshooter.sprite.Background;
 import kriuchkov.maksim.spaceshooter.sprite.Bullet;
 import kriuchkov.maksim.spaceshooter.sprite.ButtonNewGame;
 import kriuchkov.maksim.spaceshooter.sprite.EnemyShip;
 import kriuchkov.maksim.spaceshooter.sprite.MessageGameOver;
-import kriuchkov.maksim.spaceshooter.utils.EnemyShipHandler;
-import kriuchkov.maksim.spaceshooter.sprite.Background;
 import kriuchkov.maksim.spaceshooter.sprite.PlayerShip;
 import kriuchkov.maksim.spaceshooter.sprite.Star;
+import kriuchkov.maksim.spaceshooter.utils.EnemyShipHandler;
+import kriuchkov.maksim.spaceshooter.utils.Font;
 import ru.geekbrains.math.Rect;
 
 public class GameScreen extends BaseScreen {
+
+    private static final int STAR_COUNT = 32;
+    private static final float FONT_SIZE = 0.05f;
+
 
     private enum GameState {
         PLAYING, PAUSED, GAME_OVER
@@ -51,7 +56,8 @@ public class GameScreen extends BaseScreen {
     private Sound explosionSound;
     private Music gameMusic;
 
-    private static final int STAR_COUNT = 32;
+    private Font font;
+
 
     @Override
     public void show() {
@@ -82,6 +88,8 @@ public class GameScreen extends BaseScreen {
 
         messageGameOver = new MessageGameOver(atlasMain);
         buttonNewGame = new ButtonNewGame(atlasMain, this);
+
+        font = new Font("fonts/Carlito.fnt", "fonts/Carlito.png");
     }
 
     @Override
@@ -141,6 +149,7 @@ public class GameScreen extends BaseScreen {
             star.resize(worldBounds);
         messageGameOver.resize(worldBounds);
         buttonNewGame.resize(worldBounds);
+        font.dispose();
     }
 
     @Override
@@ -183,6 +192,7 @@ public class GameScreen extends BaseScreen {
             messageGameOver.draw(batch);
             buttonNewGame.draw(batch);
         }
+        printInfo();
         batch.end();
     }
 
@@ -192,7 +202,7 @@ public class GameScreen extends BaseScreen {
         explosionPool.freeAllDestroyedActiveObjects();
     }
 
-    public void checkCollisions() {
+    private void checkCollisions() {
         for (EnemyShip enemyShip : enemyShipHandler.getActiveEnemyShips()) {
             float minDist = enemyShip.getHalfHeight() + playerShip.getHalfHeight();
             if (enemyShip.pos.dst2(playerShip.pos) < minDist * minDist) {
@@ -244,5 +254,9 @@ public class GameScreen extends BaseScreen {
         playerShip.reset();
         gameState = GameState.PLAYING;
         gameMusic.play();
+    }
+
+    private void printInfo() {
+        // TODO
     }
 }
