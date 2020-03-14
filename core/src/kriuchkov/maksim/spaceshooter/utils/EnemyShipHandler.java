@@ -31,6 +31,7 @@ public class EnemyShipHandler {
     private static final int SMALL_SHIP_COLLISION_DAMAGE = 10;
     private static final float SMALL_PROBABILITY = 0.5f;
     private static final int SMALL_SHIP_POINTS = 1;
+    private static final float SMALL_BULLET_EMITTER_POS_FACTOR = 1f;
 
     private static final float MEDIUM_SHIP_HEIGHT = 0.15f;
     private static final float MEDIUM_SHIP_VELOCITY = 0.05f;
@@ -43,6 +44,7 @@ public class EnemyShipHandler {
     private static final int MEDIUM_SHIP_COLLISION_DAMAGE = 30;
     private static final float MEDIUM_PROBABILITY = 0.3f;
     private static final int MEDIUM_SHIP_POINTS = 8;
+    private static final float MEDIUM_BULLET_EMITTER_POS_FACTOR = 0.9f;
 
     private static final float BIG_SHIP_HEIGHT = 0.2f;
     private static final float BIG_SHIP_VELOCITY = 0.01f;
@@ -56,6 +58,7 @@ public class EnemyShipHandler {
     private static final float BIG_SHIP_KAMIKAZE_SPAWN_DELAY = 10f;
     private static final float BIG_PROBABILITY = 0.2f;
     private static final int BIG_SHIP_POINTS = 20;
+    private static final float BIG_BULLET_EMITTER_POS_FACTOR = 0.75f;
 
     private EnemyShipPool enemyShipPool;
     private TextureAtlas atlas;
@@ -129,6 +132,7 @@ public class EnemyShipHandler {
                     SMALL_BULLET_VELOCITY,
                     SMALL_BULLET_DAMAGE * level,
                     SMALL_SHIP_DELAY_BETWEEN_SHOTS,
+                    SMALL_BULLET_EMITTER_POS_FACTOR,
                     SMALL_SHIP_COLLISION_DAMAGE,
                     SMALL_SHIP_POINTS,
                     false,
@@ -147,6 +151,7 @@ public class EnemyShipHandler {
                     MEDIUM_BULLET_VELOCITY,
                     MEDIUM_BULLET_DAMAGE * level,
                     MEDIUM_SHIP_DELAY_BETWEEN_SHOTS,
+                    MEDIUM_BULLET_EMITTER_POS_FACTOR,
                     MEDIUM_SHIP_COLLISION_DAMAGE,
                     MEDIUM_SHIP_POINTS,
                     false,
@@ -165,6 +170,7 @@ public class EnemyShipHandler {
                     BIG_BULLET_VELOCITY,
                     BIG_BULLET_DAMAGE * level,
                     BIG_SHIP_DELAY_BETWEEN_SHOTS,
+                    BIG_BULLET_EMITTER_POS_FACTOR,
                     BIG_SHIP_COLLISION_DAMAGE,
                     BIG_SHIP_POINTS,
                     true,
@@ -192,6 +198,7 @@ public class EnemyShipHandler {
                 SMALL_BULLET_VELOCITY,
                 SMALL_BULLET_DAMAGE * level,
                 SMALL_SHIP_DELAY_BETWEEN_SHOTS,
+                SMALL_BULLET_EMITTER_POS_FACTOR,
                 SMALL_SHIP_COLLISION_DAMAGE,
                 SMALL_SHIP_POINTS,
                 false,

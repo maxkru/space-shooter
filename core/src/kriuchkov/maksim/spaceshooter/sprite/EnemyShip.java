@@ -13,6 +13,8 @@ import ru.geekbrains.math.Rect;
 
 public class EnemyShip extends Ship {
 
+    private static final double DEG_TO_RAD_FACTOR = Math.PI / 180.0;
+
     private Vector2 vThroughScreen;
     private boolean movingIn;
     private int collisionDamage;
@@ -26,6 +28,8 @@ public class EnemyShip extends Ship {
     private float bulletVelocity;
 
     private int pointsForDestruction;
+
+    private float bulletEmitterPosFactor;
 
     private Vector2 buf;
 
@@ -71,6 +75,7 @@ public class EnemyShip extends Ship {
      * @param bulletVelocity the velocity of bullets emitted by this ship in units of "screen heights" per second
      * @param bulletDamage damage dealt by bullets emitted by this ship
      * @param delayBetweenShots amount of time (in seconds) between this ship's two bullet shots
+     * @param bulletEmitterPosFactor distance from center of sprite to the bullet emitter, in units of ship's half-heights
      * @param collisionDamage damage dealt to player ship upon colliding with this ship
      * @param pointsForDestruction how much will player's score increase when this ship is destroyed by player ship
      * @param spawns if true, this ship will spawn small ships occasionally
@@ -89,6 +94,7 @@ public class EnemyShip extends Ship {
             float bulletVelocity,
             int bulletDamage,
             float delayBetweenShots,
+            float bulletEmitterPosFactor,
             int collisionDamage,
             int pointsForDestruction,
             boolean spawns,
@@ -105,6 +111,7 @@ public class EnemyShip extends Ship {
         this.bulletV.set(0f, -bulletVelocity);
         this.bulletDamage = bulletDamage;
         this.delayBetweenShots = delayBetweenShots;
+        this.bulletEmitterPosFactor = bulletEmitterPosFactor;
         this.collisionDamage = collisionDamage;
         this.pointsForDestruction = pointsForDestruction;
         this.spawns = spawns;
@@ -154,9 +161,14 @@ public class EnemyShip extends Ship {
 
     @Override
     protected void updateBulletEmitterPos() {
-        bulletEmitterPos.set(pos.x, getBottom() + 0.01f); // FIXME: needs correct logic for angle != 0
-        if (homingSprite != null)
+        if (homingSprite != null) { // angle != 0
+            double angleRad = angle * DEG_TO_RAD_FACTOR;
+            bulletEmitterPos.set(pos.x + ( (float) Math.sin(angleRad) ) * getHalfHeight() * bulletEmitterPosFactor,
+                    pos.y - ( (float) Math.cos(angleRad) ) * getHalfHeight() * bulletEmitterPosFactor);
             bulletV.set(homingSprite.pos).sub(pos).setLength(bulletVelocity);
+        } else {
+            bulletEmitterPos.set(pos.x, pos.y - getHalfHeight() * bulletEmitterPosFactor);  // to avoid unnecessary calculations for angle == 0
+        }
     }
 
     /**
