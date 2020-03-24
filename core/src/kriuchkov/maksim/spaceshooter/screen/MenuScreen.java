@@ -5,7 +5,6 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.TextureArray;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 
@@ -13,7 +12,6 @@ import kriuchkov.maksim.spaceshooter.base.BaseScreen;
 import kriuchkov.maksim.spaceshooter.sprite.Background;
 import kriuchkov.maksim.spaceshooter.sprite.ButtonExit;
 import kriuchkov.maksim.spaceshooter.sprite.ButtonStart;
-import kriuchkov.maksim.spaceshooter.sprite.Circle;
 import kriuchkov.maksim.spaceshooter.sprite.Star;
 import ru.geekbrains.math.Rect;
 

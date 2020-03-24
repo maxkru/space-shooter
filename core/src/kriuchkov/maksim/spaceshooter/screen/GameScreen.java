@@ -8,21 +8,32 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Align;
 
 import kriuchkov.maksim.spaceshooter.base.BaseScreen;
 import kriuchkov.maksim.spaceshooter.pool.BulletPool;
 import kriuchkov.maksim.spaceshooter.pool.ExplosionPool;
+import kriuchkov.maksim.spaceshooter.sprite.Background;
 import kriuchkov.maksim.spaceshooter.sprite.Bullet;
 import kriuchkov.maksim.spaceshooter.sprite.ButtonNewGame;
 import kriuchkov.maksim.spaceshooter.sprite.EnemyShip;
 import kriuchkov.maksim.spaceshooter.sprite.MessageGameOver;
-import kriuchkov.maksim.spaceshooter.utils.EnemyShipHandler;
-import kriuchkov.maksim.spaceshooter.sprite.Background;
 import kriuchkov.maksim.spaceshooter.sprite.PlayerShip;
 import kriuchkov.maksim.spaceshooter.sprite.Star;
+import kriuchkov.maksim.spaceshooter.sprite.TrackingStar;
+import kriuchkov.maksim.spaceshooter.utils.EnemyShipHandler;
+import kriuchkov.maksim.spaceshooter.utils.Font;
 import ru.geekbrains.math.Rect;
 
 public class GameScreen extends BaseScreen {
+
+    private static final int STAR_COUNT = 32;
+    private static final float FONT_SIZE = 0.03f;
+
+    private static final String SCORE_TEXT = "Score: ";
+    private static final String HP_TEXT = "HP: ";
+    private static final String LEVEL_TEXT = "Level ";
+    private static final float TEXT_PADDING = 0.01f;
 
     private enum GameState {
         PLAYING, PAUSED, GAME_OVER
@@ -39,7 +50,7 @@ public class GameScreen extends BaseScreen {
 
     private PlayerShip playerShip;
 
-    private Star[] stars;
+    private TrackingStar[] stars;
 
     private MessageGameOver messageGameOver;
     private ButtonNewGame buttonNewGame;
@@ -51,7 +62,13 @@ public class GameScreen extends BaseScreen {
     private Sound explosionSound;
     private Music gameMusic;
 
-    private static final int STAR_COUNT = 32;
+    private Font font;
+
+    private int score;
+    private int gameLevel;
+    private int nextGameLevel;
+
+    private StringBuilder sbTextPrint;
 
     @Override
     public void show() {
@@ -63,14 +80,14 @@ public class GameScreen extends BaseScreen {
         explosionSound = Gdx.audio.newSound(Gdx.files.internal("sounds/explosion.wav"));
         explosionPool = new ExplosionPool(atlasMain, explosionSound);
 
-        enemyShipHandler = new EnemyShipHandler(atlasMain, bulletPool, explosionPool);
         playerShip = new PlayerShip(atlasMain, bulletPool, explosionPool);
+        enemyShipHandler = new EnemyShipHandler(atlasMain, bulletPool, explosionPool, playerShip);
         bg = new Texture("background_simple.png");
         background = new Background(bg);
 
-        stars = new Star[STAR_COUNT];
+        stars = new TrackingStar[STAR_COUNT];
         for(int i = 0; i < STAR_COUNT; i++) {
-            stars[i] = new Star(atlas);
+            stars[i] = new TrackingStar(atlas, playerShip.getV());
         }
 
         gameState = GameState.PLAYING;
@@ -82,6 +99,13 @@ public class GameScreen extends BaseScreen {
 
         messageGameOver = new MessageGameOver(atlasMain);
         buttonNewGame = new ButtonNewGame(atlasMain, this);
+
+        font = new Font("fonts/Carlito.fnt", "fonts/Carlito.png");
+        font.setSize(FONT_SIZE);
+        sbTextPrint = new StringBuilder();
+
+        score = 0;
+        gameLevel = 1;
     }
 
     @Override
@@ -152,14 +176,17 @@ public class GameScreen extends BaseScreen {
         playerShip.dispose();
         gameMusic.dispose();
         enemyShipHandler.dispose();
+        font.dispose();
     }
 
     private void update(float delta) {
+        gameLevel = score / 100 + 1;
+
         for(Star star : stars)
             star.update(delta);
         explosionPool.updateAllActive(delta);
         if (gameState == GameState.PLAYING) {
-            enemyShipHandler.update(delta, true);
+            enemyShipHandler.update(delta, true, gameLevel);
             bulletPool.updateAllActive(delta);
             playerShip.update(delta);
             checkCollisions();
@@ -183,6 +210,7 @@ public class GameScreen extends BaseScreen {
             messageGameOver.draw(batch);
             buttonNewGame.draw(batch);
         }
+        printInfo();
         batch.end();
     }
 
@@ -192,12 +220,13 @@ public class GameScreen extends BaseScreen {
         explosionPool.freeAllDestroyedActiveObjects();
     }
 
-    public void checkCollisions() {
+    private void checkCollisions() {
         for (EnemyShip enemyShip : enemyShipHandler.getActiveEnemyShips()) {
             float minDist = enemyShip.getHalfHeight() + playerShip.getHalfHeight();
             if (enemyShip.pos.dst2(playerShip.pos) < minDist * minDist) {
                 enemyShip.destroy();
                 playerShip.damage(enemyShip.getCollisionDamage());
+                score += enemyShip.getPointsForDestruction();
             }
         }
 
@@ -207,6 +236,8 @@ public class GameScreen extends BaseScreen {
                     if (enemyShip.collidesWith(bullet)) {
                         enemyShip.damage(bullet.getDamage());
                         bullet.destroy();
+                        if (enemyShip.isDestroyed())
+                            score += enemyShip.getPointsForDestruction();
                     }
                 }
             } else {
@@ -244,5 +275,19 @@ public class GameScreen extends BaseScreen {
         playerShip.reset();
         gameState = GameState.PLAYING;
         gameMusic.play();
+        score = 0;
+        gameLevel = 1;
     }
+
+    private void printInfo() {
+        sbTextPrint.setLength(0);
+        font.draw(batch, sbTextPrint.append(SCORE_TEXT).append(score), worldBounds.getLeft() + TEXT_PADDING, worldBounds.getTop() - TEXT_PADDING, Align.left);
+
+        sbTextPrint.setLength(0);
+        font.draw(batch, sbTextPrint.append(HP_TEXT).append(playerShip.getHp()), 0f, worldBounds.getTop() - TEXT_PADDING, Align.center);
+
+        sbTextPrint.setLength(0);
+        font.draw(batch, sbTextPrint.append(LEVEL_TEXT).append(gameLevel), worldBounds.getRight() - TEXT_PADDING, worldBounds.getTop() - TEXT_PADDING, Align.right);
+    }
+
 }
